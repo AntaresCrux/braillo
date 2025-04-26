@@ -1,0 +1,4 @@
+# Colores
+BACKGROUND_COLOR = (13, 59, 102)
+BG_COLOR = (254, 249, 255)
+FADE_COLOR = (0, 0, 0)

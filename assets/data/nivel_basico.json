@@ -1,0 +1,124 @@
+{
+    "nivel_basico": {
+        "Celdas": {
+            "objetivo": "Entender cómo funciona la celda Braille y sus puntos",
+            "ejercicios": [
+                {
+                    "nombre": "Explora la celda",
+                    "tipo": "interactivo",
+                    "descripcion": "Toca los puntos y escucha su número."
+                },
+                {
+                    "nombre": "Toca el punto correcto",
+                    "tipo": "reconocimiento",
+                    "descripcion": "Identifica puntos según lo que la IA te indique."
+                },
+                {
+                    "nombre": "Rellena la celda",
+                    "tipo": "memoria visual",
+                    "descripcion": "Reproduce un patrón Braille tocando los puntos correctos."
+                }
+            ]
+        },
+        "Alfabeto": {
+            "objetivo": "Reconocer letras en Braille y relacionarlas con letras normales",
+            "ejercicios": [
+                {
+                    "nombre": "Empareja ficha",
+                    "tipo": "emparejamiento",
+                    "descripcion": "Relaciona letra escrita con su Braille correspondiente."
+                },
+                {
+                    "nombre": "Completa la palabra",
+                    "tipo": "formación",
+                    "descripcion": "Completa palabras en Braille con las letras faltantes."
+                },
+                {
+                    "nombre": "Acierta con tiempo",
+                    "tipo": "velocidad",
+                    "descripcion": "Selecciona rápidamente el equivalente Braille de una letra."
+                }
+            ]
+        },
+        "Mayúsculas": {
+            "objetivo": "Identificar y usar el prefijo de mayúscula correctamente",
+            "ejercicios": [
+                {
+                    "nombre": "¿Minúscula o Mayúscula?",
+                    "tipo": "clasificación",
+                    "descripcion": "Determina cuándo usar el prefijo de mayúscula."
+                },
+                {
+                    "nombre": "Arma nombres propios",
+                    "tipo": "creación",
+                    "descripcion": "Escribe nombres usando correctamente el prefijo."
+                },
+                {
+                    "nombre": "Elige el prefijo",
+                    "tipo": "arrastrar",
+                    "descripcion": "Arrastra el símbolo de mayúscula al lugar adecuado."
+                }
+            ]
+        },
+        "Números": {
+            "objetivo": "Reconocer el uso del prefijo ⠼ y letras A–J como dígitos",
+            "ejercicios": [
+                {
+                    "nombre": "Traduce números",
+                    "tipo": "traducción",
+                    "descripcion": "Convierte números en Braille con prefijo."
+                },
+                {
+                    "nombre": "Escribe un número",
+                    "tipo": "escritura",
+                    "descripcion": "Reproduce el número mostrado usando Braille."
+                },
+                {
+                    "nombre": "Numeración rápida",
+                    "tipo": "quiz",
+                    "descripcion": "Adivina qué letra representa cada número del 1 al 9."
+                }
+            ]
+        },
+        "Signos": {
+            "objetivo": "Aprender signos básicos como punto, coma, interrogación, etc.",
+            "ejercicios": [
+                {
+                    "nombre": "Coloca el signo",
+                    "tipo": "completar",
+                    "descripcion": "Ubica los signos correctos en frases simples."
+                },
+                {
+                    "nombre": "Adivina el signo",
+                    "tipo": "identificación",
+                    "descripcion": "Reconoce el signo a partir de su Braille."
+                },
+                {
+                    "nombre": "Clasifica signos",
+                    "tipo": "agrupamiento",
+                    "descripcion": "Separa los signos según su categoría."
+                }
+            ]
+        },
+        "Desafío Final": {
+            "objetivo": "Aplicar lo aprendido de forma integrada",
+            "ejercicios": [
+                {
+                    "nombre": "Escribe tu nombre",
+                    "tipo": "personalizado",
+                    "descripcion": "Escribe tu nombre en Braille."
+                },
+                {
+                    "nombre": "Traducción inversa",
+                    "tipo": "inverso",
+                    "descripcion": "Lee Braille y selecciona lo que dice."
+                },
+                {
+                    "nombre": "Mini historia",
+                    "tipo": "completación",
+                    "descripcion": "Completa una frase con letras y signos faltantes."
+                }
+            ]
+        }
+    }
+}

@@ -1,0 +1,17 @@
+{
+    "basico_1": {
+        "celdas": [
+            "Explora la celda",
+            "Toca el punto correcto",
+            "Rellena la celda"
+        ],
+        "alfabeto": [
+            "Empareja ficha",
+            "Completa la palabra",
+            "Acierta con tiempo"
+        ],
+        "mayusculas": [
+            "Descubre el prefijo"
+        ]
+    }
+}
