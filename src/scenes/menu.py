@@ -34,7 +34,7 @@ class Menu:
                 if selected == "jugar":
                     return "select_level"
                 elif selected == "diccionario":
-                    return "sin_escena"
+                    return "diccionario"
                 elif selected == "configurar":
                     return "configurar"
                 elif selected == "salir":

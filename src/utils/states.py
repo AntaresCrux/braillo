@@ -8,6 +8,7 @@ class AppStates:
     MENU = "menu"
     CONFIGURAR = "configurar"
     SELECT_LEVEL = "select_level"
+    diccionario = "diccionario"
     CELDA = "celdas"
     ALFABETO = "alfabeto"
     MAYUSCULAS = "mayusculas"
