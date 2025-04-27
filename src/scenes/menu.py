@@ -1,6 +1,8 @@
 import pygame
 from ui.coverflow import CoverFlow
-from ui.popup_message import PopupMessage  # ← NUEVO
+from ui.ui_helpers import update_and_draw_particles, create_particles
+from utils.settings import WIDTH, HEIGHT
+from ui.popup_message import PopupMessage  
 from utils.states import AppStates
 from utils.colors import BACKGROUND_COLOR
 
@@ -9,6 +11,8 @@ class Menu:
         self.state = AppStates.MENU
         self.assets = assets
         self.screen = pygame.display.get_surface()
+        # Animación de partículas
+        self.particles = create_particles(amount=30, screen_width=WIDTH, screen_height=HEIGHT)
 
         ordered_keys = ['diccionario', 'jugar', 'configurar', 'salir']
         buttons = [self.assets.buttons[key] for key in ordered_keys]
@@ -21,8 +25,15 @@ class Menu:
 
     def update(self, dt):
         self.coverflow.update(dt)
+        #update_and_draw_particles(self.particles, self.screen, dt=1/60)
+        # Actualiza las partículas
+        for particle in self.particles:
+            particle.update(dt)
 
     def handle_event(self, event):
+        # Dibuja las partículas
+        #update_and_draw_particles(self.particles, self.screen, dt=1/60)
+
         if self.exit_popup and self.exit_popup.visible:
             self.exit_popup.handle_event(event)
             return None  # bloquea eventos mientras está abierto
@@ -43,6 +54,10 @@ class Menu:
 
     def draw(self):
         self.screen.fill(BACKGROUND_COLOR)
+        # Dibuja primero las partículas
+        for particle in self.particles:
+            particle.draw(self.screen)
+
         self.coverflow.draw(self.screen)
         if self.exit_popup and self.exit_popup.visible:
             self.exit_popup.draw()

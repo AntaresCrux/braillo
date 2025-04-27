@@ -2,6 +2,7 @@ import pygame
 from PIL import Image, ImageSequence
 from pathlib import Path
 from utils.settings import ASSETS_PATHS, WIDTH, HEIGHT
+from utils.settings import load_fonts
 
 class AssetsManager:
     def __init__(self):
@@ -30,11 +31,9 @@ class AssetsManager:
 
     def _load_fonts(self):
         try:
-            font_path = ASSETS_PATHS['font']
-            self.fonts['default'] = pygame.font.Font(font_path, 24)
-            self.fonts['big'] = pygame.font.Font(font_path, 32)
+            self.fonts = load_fonts()
         except Exception as e:
-            print(f"Error loading font: {e}")
+            print(f"Error loading fonts: {e}")
 
     def _load_gif(self):
         try:

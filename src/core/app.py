@@ -22,19 +22,15 @@ class BrailleApp:
         self.assets = AssetsManager()
         self.progress = ProgressManager()
         self.state_manager = StateManager()
-
+        self.music_manager = MusicManager(ASSETS_PATHS['music'])
+        self.music_manager.play_music()
         self.state_manager.add_state("intro", Intro(self.assets))
         self.state_manager.add_state("menu", Menu(self.assets))
         self.state_manager.add_state("select_level", SelectLevel(self.assets, self.progress))
         self.state_manager.add_state("celdas", CeldaScene(self.assets, self.progress))
         self.state_manager.add_state("mayusculas", MayusculasScene(self.assets, self.progress))
-        #self.state_manager.add_state("configurar", ConfigScene(self.assets, self.progress, self.music_manager))
-        self.state_manager.set_state("intro") #para probar desde el principio
-
-        self.music_manager = MusicManager(ASSETS_PATHS['music'])
-        self.music_manager.play_music()
-
         self.state_manager.add_state("configurar", ConfigScene(self.assets, self.music_manager))
+        self.state_manager.set_state("intro") #para probar desde el principio
 
     def run(self):
         running = True

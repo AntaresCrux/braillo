@@ -43,8 +43,8 @@ class CeldaScene:
         # Menú lateral con nombres cortos de cada ejercicio
         self.sidebar = SidebarMenu(
             labels=["Explora", "Reconoce", "Prueba"],
-            font=self.assets.fonts['default'],
-            width=160,
+            font=self.assets.fonts['small'],
+            width=240,
             height=HEIGHT
         )
 
