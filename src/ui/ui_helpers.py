@@ -80,19 +80,25 @@ def update_and_draw_particles(particles, surface, dt):
         particle.update(dt)
         particle.draw(surface)
 
-def draw_text_centered(surface, text, font, y, color=(255, 255, 255)):
+def draw_text_centered(surface, text, font, y, color, x=None):
     """
-    Dibuja una línea de texto centrada horizontalmente en la pantalla.
+    Dibuja una línea de texto en la pantalla.
+
+    Si no se especifica x, centra el texto automáticamente.
 
     Args:
         surface: Superficie de pygame donde se dibuja el texto.
         text (str): El texto a dibujar.
         font: Fuente pygame para renderizar el texto.
         y (int): Posición vertical (eje Y) donde dibujar el texto.
+        x (int, optional): Posición horizontal (eje X). Si es None, se centra.
         color (tuple): Color del texto en formato RGB.
     """
     text_surface = font.render(text, True, color)
-    x = surface.get_width() // 2 - text_surface.get_width() // 2
+    
+    if x is None:
+        x = surface.get_width() // 2 - text_surface.get_width() // 2
+
     surface.blit(text_surface, (x, y))
 
 def draw_multiline_centered(surface, text_lines, font, y_start, line_spacing=30, color=(255, 255, 255)):
@@ -297,3 +303,21 @@ def draw_braille_word(surface, palabra, braille_data, x_start, y_start, max_widt
 
         x_actual += separacion_horizontal * 2 + espacio_letra
 
+def draw_progress_text(surface, font, current, total, x, y, color):
+    """
+    Dibuja un contador de progreso centrado.
+
+    Parámetros:
+    - surface: Superficie donde dibujar.
+    - font: Fuente a usar.
+    - current: Progreso actual.
+    - total: Progreso total.
+    - y: Posición vertical.
+    - color: Color del texto (por defecto blanco).
+    """
+    texto = f"Progreso: {current}/{total}"
+    render = font.render(texto, True, color)
+    # Si no se da x, centrarlo
+    if x is None:
+        x = surface.get_width() // 2 - render.get_width() // 2
+    surface.blit(render, (x, y))

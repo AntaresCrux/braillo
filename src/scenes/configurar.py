@@ -1,5 +1,6 @@
 import pygame
 from utils.settings import HEIGHT, ASSETS_PATHS
+from utils.colors import BACKGROUND_COLOR, BLANCO, CREMA_CLARO, AMARILLO_PASTEL, AZUL_OSCURO
 from ui.ui_helpers import draw_text_centered
 
 class ConfigScene:
@@ -44,10 +45,15 @@ class ConfigScene:
 
         elif event.type == pygame.MOUSEBUTTONUP:
             self.dragging_knob = False
+            # Forzar ajuste del knob al soltar
+            x = max(self.slider_rect.left, min(self.slider_knob_rect.centerx, self.slider_rect.right))
+            self.slider_knob_rect.centerx = x
+            new_volume = (x - self.slider_rect.left) / 300
+            self.music_manager.set_volume(new_volume)
 
         elif event.type == pygame.MOUSEMOTION and self.dragging_knob:
             x = max(self.slider_rect.left, min(event.pos[0], self.slider_rect.right))
-            self.slider_knob_rect.x = x - 5
+            self.slider_knob_rect.centerx = x
             new_volume = (x - self.slider_rect.left) / 300
             self.music_manager.set_volume(new_volume)
 
@@ -57,26 +63,33 @@ class ConfigScene:
         pass
 
     def draw(self):
-        self.screen.fill((13, 59, 102))
-        draw_text_centered(self.screen, "Configuraciones", self.assets.fonts['big'], 20)
+        self.screen.fill(BACKGROUND_COLOR)  # Tu color azul oscuro base
+
+        draw_text_centered(self.screen, "Configuraciones", self.assets.fonts['big'], 20, BLANCO)
 
         # Botón de regresar
         self.screen.blit(self.back_icon, self.back_rect.topleft)
 
-        # Icono de música y texto alineado
+        # Icono de música y texto
         icon = self.music_on_icon if self.music_enabled else self.music_off_icon
         self.screen.blit(icon, self.music_icon_rect.topleft)
 
-        music_text = self.assets.fonts['default'].render("Música", True, (255, 255, 255))
+        music_text = self.assets.fonts['default'].render("Música", True, BLANCO)
         self.screen.blit(music_text, (self.music_icon_rect.right + 10, self.music_icon_rect.y + 5))
 
         # Texto "Volumen" centrado
-        volumen_text = self.assets.fonts['default'].render("Volumen", True, (255, 255, 255))
+        volumen_text = self.assets.fonts['default'].render("Volumen", True, BLANCO)
         volumen_text_rect = volumen_text.get_rect(center=(self.slider_rect.centerx, self.slider_rect.top - 25))
         self.screen.blit(volumen_text, volumen_text_rect)
 
-        # Barra de volumen
-        pygame.draw.rect(self.screen, (200, 200, 200), self.slider_rect)
-        pygame.draw.rect(self.screen, (249, 209, 84), self.slider_knob_rect, border_radius=5)
+        # Barra de volumen estilizada con tus colores
+        pygame.draw.rect(self.screen, CREMA_CLARO, self.slider_rect, border_radius=5)  # Fondo crema clarito
+        filled_width = self.slider_knob_rect.centerx - self.slider_rect.left
+        if filled_width > 0:
+            pygame.draw.rect(self.screen, AMARILLO_PASTEL, (self.slider_rect.left, self.slider_rect.top, filled_width, self.slider_rect.height), border_radius=5)
+
+        # Knob como circulito blanco con borde azul oscuro
+        pygame.draw.circle(self.screen, BLANCO, self.slider_knob_rect.center, 10)
+        pygame.draw.circle(self.screen, AZUL_OSCURO, self.slider_knob_rect.center, 10, 2)  # Contorno azul oscuro
 
         pygame.display.flip()

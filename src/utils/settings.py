@@ -18,6 +18,7 @@ ASSETS_PATHS = {
         'salir': "assets/images/icono_salir.png",
         'back': "assets/images/icono_regresar.png",
         'next': "assets/images/icono_siguiente.png",
+        'check': "assets/images/icono_correcto.png",
         'menu': "assets/images/icono_menu.png",
         'musica_on': "assets/images/icono_volum.png",
         'musica_off': "assets/images/icono_vol_mute.png"
@@ -30,6 +31,26 @@ ASSETS_PATHS = {
         'numeros_on': "assets/images/basico_4_on.png",
         'signos_on': "assets/images/basico_5_on.png",
         'desfinal_on': "assets/images/basico_6_on.png",
+        'celda_base': "assets/images/celda.png",
+    },
+    "fichas": {
+        "prefijo": "assets/images/numeros_braille/prefijo_numero.png",
+        "numeros": {
+            "0": "assets/images/numeros_braille/0.png",
+            "1": "assets/images/numeros_braille/1.png",
+            "2": "assets/images/numeros_braille/2.png",
+            "3": "assets/images/numeros_braille/3.png",
+            "4": "assets/images/numeros_braille/4.png",
+            "5": "assets/images/numeros_braille/5.png",
+            "6": "assets/images/numeros_braille/6.png",
+            "7": "assets/images/numeros_braille/7.png",
+            "8": "assets/images/numeros_braille/8.png",
+            "9": "assets/images/numeros_braille/9.png"
+        },
+        "separadores": {
+            "miles": "assets/images/numeros_braille/separador_miles.png",
+            "decimal": "assets/images/numeros_braille/separador_decimal.png"
+        }
     }
 }
 

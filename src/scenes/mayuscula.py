@@ -2,7 +2,7 @@ import pygame
 import json
 import random
 from utils.settings import WIDTH, HEIGHT, ASSETS_PATHS
-from utils.colors import BACKGROUND_COLOR
+from utils.colors import BACKGROUND_COLOR, BLANCO
 from ui.ui_helpers import draw_text_centered, draw_circle_with_label, draw_multiline_centered, draw_pulsing_button, draw_breathing_background, create_particles, update_and_draw_particles, draw_braille_cell, draw_braille_word
 from ui.sidebar_menu import SidebarMenu
 from ui.popup_message import PopupMessage
@@ -317,7 +317,7 @@ class MayusculasScene:
 
     def draw(self):
         self.screen.fill(BACKGROUND_COLOR)
-        draw_text_centered(self.screen, self.ejercicios[self.current_index], self.assets.fonts['big'], 30)
+        draw_text_centered(self.screen, self.ejercicios[self.current_index], self.assets.fonts['default'], 22, color=BLANCO)
 
         if self.current_index == 0:
             if self.modo == "instruccion":

@@ -1,6 +1,7 @@
 import pygame
 import random
 from utils.settings import WIDTH, HEIGHT, ASSETS_PATHS
+from utils.colors import BLANCO
 from ui.ui_helpers import draw_text_centered, draw_circle_with_label
 from ui.sidebar_menu import SidebarMenu
 from ui.popup_message import PopupMessage
@@ -205,7 +206,7 @@ class CeldaScene:
         Dibuja toda la escena: fondo, botones, ejercicios y mensajes.
         """
         self.screen.fill((13, 59, 102))
-        draw_text_centered(self.screen, self.ejercicios[self.current_index], self.assets.fonts['big'], 30)
+        draw_text_centered(self.screen, self.ejercicios[self.current_index], self.assets.fonts['big'], 30, color=BLANCO)
 
         if self.current_index == 0:
             self.draw_explora()

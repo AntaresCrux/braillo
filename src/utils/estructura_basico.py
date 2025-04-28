@@ -20,7 +20,7 @@ estructura_basico = {
             "objetivo": "Identificar y usar correctamente el prefijo de mayúscula en Braille.",
             "ejercicios": [
                 {
-                    "nombre": "Descubre el prefijo",
+                    "nombre": "Aprende el prefijo",
                     "tipo": "exploración",
                     "descripcion": "Explora cómo se representa el prefijo de mayúscula (punto 6) en Braille."
                 },

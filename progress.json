@@ -15,6 +15,10 @@
             "¿Minúscula o Mayúscula?",
             "Arma nombres propios",
             "Aplica en siglas"
+        ],
+        "numeros": [
+            "Aprende el prefijo",
+            "Traduce números"
         ]
     }
 }

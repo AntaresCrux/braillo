@@ -69,7 +69,9 @@ class PopupMessage:
                 if btn['rect'].collidepoint(event.pos):
                     if btn['action']:
                         btn['action']()
-
+                    self.hide() # Ocultamos el popup después de hacer clic en un botón
+                    return "close"  # ahora sí avisamos que se puede cerrar
+                
     def draw(self):
         if not self.visible:
             return
