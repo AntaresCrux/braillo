@@ -12,6 +12,10 @@
         ],
         "mayusculas": [
             "Descubre el prefijo"
+        ],
+        "letras": [
+            "Escribe la letra",
+            "Identifica la letra"
         ]
     }
 }

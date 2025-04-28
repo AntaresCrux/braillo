@@ -33,6 +33,7 @@ class AssetsManager:
             font_path = ASSETS_PATHS['font']
             self.fonts['default'] = pygame.font.Font(font_path, 24)
             self.fonts['big'] = pygame.font.Font(font_path, 32)
+            self.fonts["giant"] = pygame.font.Font(font_path, 160)
         except Exception as e:
             print(f"Error loading font: {e}")
 

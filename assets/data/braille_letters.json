@@ -13,6 +13,32 @@
   "prefijos": {
     "mayuscula": [4, 6]
   },
+  
+    "palabras": [
+      "ave",
+      "bote",
+      "cine",
+      "duro",
+      "fino",
+      "gala",
+      "humo",
+      "juez",
+      "kilo",
+      "lupa",
+      "meta",
+      "ñame",
+      "queso",
+      "rojo",
+      "sola",
+      "taza",
+      "uña",
+      "vaca",
+      "wifi",
+      "xolo",
+      "yate",
+      "zeta"
+    ]
+  ,
   "letras": {
     "a": [1],
     "b": [1, 2],
