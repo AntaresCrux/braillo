@@ -8,29 +8,29 @@ class SidebarMenu:
         self.font = font
         self.width = width
         self.height = height
-        self.visible = False  # Estado lógico (si debe mostrarse o no)
-        self.current_x = WIDTH  # Empezamos ocultos, fuera de la pantalla
-        self.target_x = WIDTH  # Posición objetivo
+        self.visible = False                                                    # Estado lógico se muestra o no
+        self.current_x = WIDTH                                                  # Inicia oculto, fuera de la pantalla
+        self.target_x = WIDTH                                                   # Posición objetivo
         self.rect = pygame.Rect(self.current_x, 0, self.width, self.height)
 
-        # Configuración de botones
+        # Configuración de botones dentro del menu
         self.button_width = 200
         self.button_height = 42
         self.button_spacing = 18
 
-        # Velocidad de animación
-        self.speed = 800  # píxeles por segundo (ajustable)
+        # Velocidad de despliegue
+        self.speed = 800  
 
     def toggle(self):
         self.visible = not self.visible
         if self.visible:
-            self.target_x = WIDTH - self.width  # Mostrar
+            self.target_x = WIDTH - self.width  # Lo mostramos
         else:
-            self.target_x = WIDTH  # Ocultar (fuera de pantalla)
+            self.target_x = WIDTH               # Lo ocultamos
 
     def handle_event(self, event):
         if self.current_x != WIDTH - self.width:
-            return None  # No aceptar clics hasta que esté completamente desplegado
+            return None  #No deja clickear hasta que esté desplegado
 
         if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
             if self.rect.collidepoint(event.pos):
@@ -49,7 +49,7 @@ class SidebarMenu:
         return None
 
     def update(self, dt):
-        # Animar movimiento hacia target_x
+        # Le dice haci donde se va animar, que dirección
         if self.current_x < self.target_x:
             self.current_x += self.speed * dt
             if self.current_x > self.target_x:
@@ -59,7 +59,7 @@ class SidebarMenu:
             if self.current_x < self.target_x:
                 self.current_x = self.target_x
 
-        # Corrige el problema: si llegó a estar completamente oculto, ya no está visible
+        #Confirmacion, al estar completamente oculto, ya no está visible
         if self.current_x >= WIDTH:
             self.visible = False
 
@@ -67,11 +67,11 @@ class SidebarMenu:
 
 
     def draw(self, surface):
-        # Si está totalmente oculto y además ya no es visible, no dibujar
+        # Si ya esta oculto y no es visible, no se dibuja dibujar
         if not self.visible and self.current_x >= WIDTH:
             return
 
-        # Fondo del sidebar
+        # Fondo del menu
         pygame.draw.rect(surface, (252, 244, 220), self.rect, border_radius=20)
 
         # Botones

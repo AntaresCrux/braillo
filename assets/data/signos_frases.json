@@ -1,0 +1,13 @@
+[
+    {"texto": "¿Dónde estás_", "respuesta": "?"},
+    {"texto": "¡Felicidades por tu logro_", "respuesta": "!"},
+    {"texto": "El sol brilla_ los pájaros cantan.", "respuesta": ","},
+    {"texto": "Vamos al parque_ luego al museo.", "respuesta": ","},
+    {"texto": "Ella exclamó:_Qué alegría verte_.", "respuesta": "“"},
+    {"texto": "Compré pan_ leche y mantequilla.", "respuesta": ","},
+    {"texto": "Necesito tijeras_ papel y cinta.", "respuesta": ","},
+    {"texto": "_No corras tanto_", "respuesta": "!"},
+    {"texto": "Él preguntó _Vienes conmigo _", "respuesta": "“"},
+    {"texto": "Estoy cansado_ ¿puedes ayudarme?", "respuesta": "."}
+]
+

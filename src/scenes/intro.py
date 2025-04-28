@@ -1,5 +1,5 @@
 import pygame
-from utils.settings import WIDTH, HEIGHT
+from utils.settings import WIDTH, HEIGHT, ASSETS_PATHS
 from utils.colors import FADE_COLOR, BACKGROUND_COLOR
 from utils.states import AppStates
 

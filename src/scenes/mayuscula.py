@@ -47,7 +47,7 @@ class MayusculasScene:
         self.boton_siguiente_img = pygame.transform.smoothscale(self.boton_siguiente_img, (60, 60))
         self.boton_siguiente_rect = self.boton_siguiente_img.get_rect(topright=(WIDTH - 10, HEIGHT - 70))
 
-        # Load Braille data
+        # Cargamos los datos de Braille
         with open('assets/data/braille_letters.json', 'r', encoding='utf-8') as f:
             self.braille_data = json.load(f)
         with open('assets/data/nombres_siglas.json', 'r', encoding='utf-8') as f:
@@ -57,7 +57,7 @@ class MayusculasScene:
         self.mayusculas_braille = self.braille_data["mayusculas"]
         self.prefijo_mayuscula = self.braille_data["prefijos"]["mayuscula"]
 
-        # Exercise Variables
+        # Variables de los ejercicios
         self.puntos = [(180, 100), (180, 170), (180, 240), (300, 100), (300, 170), (300, 240)]
         self.modo = "instruccion"
         self.tocados_correctos = set()
@@ -215,15 +215,15 @@ class MayusculasScene:
                 else:
                     self.feedback_siglas = "Incorrecto. Era una sigla."
 
-        # --- VERIFICACIONES Y POPUPS ---
+    #VERIFICACIONES Y MODAL
 
     def mostrar_modal_prefijo(self):
         self.popup = PopupMessage(
             self.screen,
             font_title=self.assets.fonts['big'],
-            font_text=self.assets.fonts['default'],
+            font_text=self.assets.fonts['small'],
             title="¡Muy bien!",
-            message="Los puntos 4 y 6 forman el prefijo de mayúscula en Braille.",
+            message="Los puntos 4 y 6 forman el prefijo.",
             on_close=lambda: (self.progress.mark_exercise_done("basico_1", "mayusculas", "Aprende el prefijo"), self.next_exercise()),
             show_next=False
         )
@@ -235,9 +235,9 @@ class MayusculasScene:
             self.popup = PopupMessage(
                 self.screen,
                 font_title=self.assets.fonts['big'],
-                font_text=self.assets.fonts['default'],
+                font_text=self.assets.fonts['small'],
                 title="¡Excelente!",
-                message="¡Completaste el reto de minúsculas y mayúsculas!",
+                message="¡Completaste el reto!",
                 on_close=lambda: (self.progress.mark_exercise_done("basico_1", "mayusculas", "¿Minúscula o Mayúscula?"), self.next_exercise()),
                 show_next=False
             )
@@ -251,9 +251,9 @@ class MayusculasScene:
             self.popup = PopupMessage(
                 self.screen,
                 font_title=self.assets.fonts['big'],
-                font_text=self.assets.fonts['default'],
+                font_text=self.assets.fonts['small'],
                 title="¡Muy bien!",
-                message="¡Completaste el reto de nombres propios en Braille!",
+                message="¡Completaste el ejercicio!",
                 on_close=lambda: (self.progress.mark_exercise_done("basico_1", "mayusculas", "Arma nombres propios"), self.next_exercise()),
                 show_next=False
             )
@@ -267,9 +267,9 @@ class MayusculasScene:
             self.popup = PopupMessage(
                 self.screen,
                 font_title=self.assets.fonts['big'],
-                font_text=self.assets.fonts['default'],
+                font_text=self.assets.fonts['small'],
                 title="¡Excelente!",
-                message="¡Terminaste el reto de siglas en Braille!",
+                message="¡Terminaste el reto de siglas!",
                 on_close=lambda: self._mostrar_popup_final(),
                 show_next=False
             )
@@ -282,7 +282,7 @@ class MayusculasScene:
         self.popup = PopupMessage(
             self.screen,
             font_title=self.assets.fonts['big'],
-            font_text=self.assets.fonts['default'],
+            font_text=self.assets.fonts['small'],
             title="¡Felicidades!",
             message="Has completado toda la sección de MAYÚSCULAS.\n\n¡Gran trabajo!",
             on_close=lambda: self.switch_exercise(0),
@@ -295,7 +295,7 @@ class MayusculasScene:
             self.popup = PopupMessage(
                 self.screen,
                 font_title=self.assets.fonts['big'],
-                font_text=self.assets.fonts['default'],
+                font_text=self.assets.fonts['small'],
                 title="¡Ánimo!",
                 message="Recuerda: las mayúsculas llevan prefijo (puntos 4 y 6).\n¡Sigue practicando!",
                 on_close=lambda: self._reiniciar_errores(),
@@ -309,7 +309,7 @@ class MayusculasScene:
         self.popup = None
         self.generar_nueva_clasificacion()
 
-    # --- UPDATE Y DRAW PRINCIPALES ---
+    #Actualizaciones y dibujo
 
     def update(self, dt):
         self.sidebar.update(dt)
@@ -345,7 +345,7 @@ class MayusculasScene:
 
         pygame.display.flip()
 
-        # --- CREAR BOTONES ---
+        #Botones
 
     def _crear_botones_clasifica(self):
         boton_min = pygame.Rect(WIDTH//4 - 75, HEIGHT - 120, 150, 60)
@@ -392,7 +392,7 @@ class MayusculasScene:
         self.sigla_actual = random.choice(siglas)
         self.es_sigla = random.choice([True, False])
 
-    # --- CAMBIAR DE EJERCICIO O RESETEAR ESTADO ---
+    #CAMBIAR DE EJERCICIO O RESETEAR ESTADO
 
     def switch_exercise(self, index):
         self.current_index = index
@@ -431,7 +431,7 @@ class MayusculasScene:
         if self.current_index == 3:
             self.generar_sigla()
 
-        # --- DIBUJAR ESCENAS DE EJERCICIO ---
+        #DIBUJAR ESCENAS DE EJERCICIO
 
     def draw_instruccion(self):
         draw_breathing_background(
@@ -525,12 +525,12 @@ class MayusculasScene:
     def draw_nombres(self):
         self.screen.fill((13, 59, 102))
 
-        x_start = 50  # Margen izquierdo inicial
+        x_start = 50             # Margen izquierdo inicial
         y_start = HEIGHT // 3
 
         # Si el nombre debe llevar prefijo
         if self.bien_escrito:
-            # Dibuja el prefijo (puntos 4 y 6)
+            # Dibujamos el prefijo (puntos 4 y 6)
             draw_braille_cell(
                 surface=self.screen,
                 puntos_activos=self.prefijo_mayuscula,
@@ -540,10 +540,10 @@ class MayusculasScene:
                 separacion_horizontal=37,
                 separacion_vertical=30
             )
-            # Mueve el inicio para la palabra (dejar espacio después del prefijo)
-            x_start += 90  # Puedes ajustar si quieres más separación
+            # Movemos el inicio para la palabra 
+            x_start += 90 
 
-        # Dibuja el nombre propio en Braille
+        # Dibujamos nombres propios en Braille
         draw_braille_word(
             surface=self.screen,
             palabra=self.nombre_actual,

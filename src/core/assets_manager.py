@@ -76,20 +76,20 @@ class AssetsManager:
         return ((WIDTH - self.gif_size[0]) // 2, (HEIGHT - self.gif_size[1]) // 2) if self.gif_size else (0, 0)
 
     def _load_fichas(self):
-        # Cargar prefijo
+        # Cargamos el prefijo
         try:
             self.fichas["prefijo"] = pygame.image.load(ASSETS_PATHS['fichas']['prefijo']).convert_alpha()
         except Exception as e:
             print(f"Error loading ficha prefijo: {e}")
 
-        # Cargar números
+        # Cargamos los números
         for num, path in ASSETS_PATHS['fichas']['numeros'].items():
             try:
                 self.fichas[num] = pygame.image.load(path).convert_alpha()
             except Exception as e:
                 print(f"Error loading ficha numero {num}: {e}")
 
-        # Cargar separadores
+        # Cargar separadores de numeros (decimal/miles)
         for sep, path in ASSETS_PATHS['fichas']['separadores'].items():
             try:
                 if sep == "miles":

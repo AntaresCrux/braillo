@@ -10,7 +10,7 @@ ASSETS_PATHS = {
     'gif': "assets/media/intro_braillo.gif",
     'font': "assets/fonts/Coiny-Regular.ttf",
     'braille_font': "assets/fonts/ONCE_CBE_6G.ttf",
-    'music': "assets/sounds/Background.ogg",
+    'music': "assets/sounds/intro2.ogg",
     'buttons': {
         'diccionario': "assets/images/icono_diccionario.png",
         'jugar': "assets/images/icono_jugar.png",
@@ -50,6 +50,18 @@ ASSETS_PATHS = {
         "separadores": {
             "miles": "assets/images/numeros_braille/separador_miles.png",
             "decimal": "assets/images/numeros_braille/separador_decimal.png"
+        },
+        "signos": {
+            "." and "...": "assets/images/signos_braille/punto.png",
+            ",": "assets/images/signos_braille/coma.png",
+            ";": "assets/images/signos_braille/punto-coma.png",
+            ":": "assets/images/signos_braille/dos-puntos.png",
+            "-": "assets/images/signos_braille/guion.png",
+            "¿" and  "?": "assets/images/signos_braille/interrogacion.png",
+            "¡" and "!": "assets/images/signos_braille/admiracion.png",
+            "“" and "”": "assets/images/signos_braille/comillas-dobles.png",
+            "(": "assets/images/signos_braille/parentesis-apertura.png",
+            ")": "assets/images/signos_braille/parentesis-cierre.png",
         }
     }
 }

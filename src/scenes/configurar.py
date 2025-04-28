@@ -63,7 +63,7 @@ class ConfigScene:
         pass
 
     def draw(self):
-        self.screen.fill(BACKGROUND_COLOR)  # Tu color azul oscuro base
+        self.screen.fill(BACKGROUND_COLOR)  # Color de la pantalla
 
         draw_text_centered(self.screen, "Configuraciones", self.assets.fonts['big'], 20, BLANCO)
 
@@ -77,19 +77,19 @@ class ConfigScene:
         music_text = self.assets.fonts['default'].render("Música", True, BLANCO)
         self.screen.blit(music_text, (self.music_icon_rect.right + 10, self.music_icon_rect.y + 5))
 
-        # Texto "Volumen" centrado
+        # Texto del volumen centrado
         volumen_text = self.assets.fonts['default'].render("Volumen", True, BLANCO)
         volumen_text_rect = volumen_text.get_rect(center=(self.slider_rect.centerx, self.slider_rect.top - 25))
         self.screen.blit(volumen_text, volumen_text_rect)
 
-        # Barra de volumen estilizada con tus colores
+        # Barra de volumen
         pygame.draw.rect(self.screen, CREMA_CLARO, self.slider_rect, border_radius=5)  # Fondo crema clarito
         filled_width = self.slider_knob_rect.centerx - self.slider_rect.left
         if filled_width > 0:
             pygame.draw.rect(self.screen, AMARILLO_PASTEL, (self.slider_rect.left, self.slider_rect.top, filled_width, self.slider_rect.height), border_radius=5)
 
-        # Knob como circulito blanco con borde azul oscuro
-        pygame.draw.circle(self.screen, BLANCO, self.slider_knob_rect.center, 10)
-        pygame.draw.circle(self.screen, AZUL_OSCURO, self.slider_knob_rect.center, 10, 2)  # Contorno azul oscuro
+        # Circulito para mover el volumen
+        pygame.draw.circle(self.screen, AMARILLO_PASTEL, self.slider_knob_rect.center, 20)
+        pygame.draw.circle(self.screen, CREMA_CLARO, self.slider_knob_rect.center, 30, 2)  # Contorno 
 
         pygame.display.flip()

@@ -1,6 +1,6 @@
 import pygame
 from ui.coverflow import CoverFlow
-from ui.ui_helpers import update_and_draw_particles, create_particles
+from ui.ui_helpers import create_particles
 from utils.settings import WIDTH, HEIGHT
 from ui.popup_message import PopupMessage  
 from utils.states import AppStates
@@ -11,29 +11,31 @@ class Menu:
         self.state = AppStates.MENU
         self.assets = assets
         self.screen = pygame.display.get_surface()
-        # Animación de partículas
         self.particles = create_particles(amount=30, screen_width=WIDTH, screen_height=HEIGHT)
-
         ordered_keys = ['diccionario', 'jugar', 'configurar', 'salir']
         buttons = [self.assets.buttons[key] for key in ordered_keys]
         self.coverflow = CoverFlow(buttons, font=assets.fonts['big'])
         self.button_actions = ['diccionario', 'jugar', 'configurar', 'salir']
-
-        self.exit_popup = None  # ← NUEVO
+        self.exit_popup = None 
 
         print("Botones cargados:", buttons)
 
+    """
+    def on_enter(self):
+        self.music_manager.refresh_status()  # ← agrega esto si no lo tienes
+
+        # Asegurar que el volumen esté correcto al entrar
+        pygame.mixer.music.set_volume(self.music_manager.get_volume())
+
+        if not self.music_manager.is_playing():
+            self.music_manager.play_music()
+    """
     def update(self, dt):
         self.coverflow.update(dt)
-        #update_and_draw_particles(self.particles, self.screen, dt=1/60)
-        # Actualiza las partículas
         for particle in self.particles:
             particle.update(dt)
 
     def handle_event(self, event):
-        # Dibuja las partículas
-        #update_and_draw_particles(self.particles, self.screen, dt=1/60)
-
         if self.exit_popup and self.exit_popup.visible:
             self.exit_popup.handle_event(event)
             return None  # bloquea eventos mientras está abierto
@@ -67,7 +69,7 @@ class Menu:
         self.exit_popup = PopupMessage(
             screen=self.screen,
             font_title=self.assets.fonts['big'],
-            font_text=self.assets.fonts['default'],
+            font_text=self.assets.fonts['small'],
             title="Confirmación",
             message="¿Estás seguro que deseas salir?",
             btn_texts=("Cancelar", "Sí"),

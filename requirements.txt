@@ -1,2 +1,2 @@
-pillow==11.2.0
-pygame==2.6.1
+pillow>=9.0
+pygame --pre

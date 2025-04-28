@@ -1,7 +1,7 @@
 import pygame
 import random
 from utils.settings import WIDTH, HEIGHT, ASSETS_PATHS
-from utils.colors import BLANCO
+from utils.colors import BLANCO, AMARILLO_PASTEL, VERDE, NARANJA
 from ui.ui_helpers import draw_text_centered, draw_circle_with_label
 from ui.sidebar_menu import SidebarMenu
 from ui.popup_message import PopupMessage
@@ -27,16 +27,16 @@ class CeldaScene:
             "Toca el punto indicado",
             "Rellena la celda"
         ]
-        self.current_index = 0  # Ejercicio activo
+        self.current_index = 0    # Ejercicio activo
         self.estado = "en_curso"
         self.last_clicked = None  # Último punto tocado (solo para ejercicio 1)
 
-        # Botón de menú lateral (hamburguesa)
+        # Botón de menú lateral 
         self.menu_button_rect = pygame.Rect(10, 10, 60, 60)
         self.menu_icon = pygame.image.load(ASSETS_PATHS['buttons']['menu']).convert_alpha()
         self.menu_icon = pygame.transform.smoothscale(self.menu_icon, (60, 60))
 
-        # Botón de regresar a selección de niveles
+        # Botón de regresar a niveles
         self.back_icon = pygame.image.load(ASSETS_PATHS['buttons']['back']).convert_alpha()
         self.back_icon = pygame.transform.smoothscale(self.back_icon, (60, 60))
         self.back_icon_rect = self.back_icon.get_rect(topleft=(10, HEIGHT - 70))
@@ -49,19 +49,23 @@ class CeldaScene:
             height=HEIGHT
         )
 
-        # Coordenadas de los puntos Braille (comunes a los 3 ejercicios)
+        # Coordenadas de los puntos Braille (se usan para los 3 ejercicios)
         self.puntos = [
             (180, 100), (180, 170), (180, 240),
             (300, 100), (300, 170), (300, 240)
         ]
-        self.tocados = set()  # Puntos tocados (ejercicio 1)
-        self.popup = None  # Popup activo
+
+        # Ejercicio 1: "Explora la celda"
+        self.tocados = set()   # Puntos tocados (ejercicio 1)
+        self.popup = None      # Popup activo (modal)
 
         # Ejercicio 2: "Toca el punto indicado"
         self.objetivo = 1
         self.aciertos = 0
         self.total_objetivos = 5
         self.mostrar_feedback = ""
+        self.feedback_timer = 0         # Temporizador para mostrar el feedback
+        self.feedback_mostrado = False  # Estado del feedback
 
         # Ejercicio 3: "Rellena la celda"
         self.patron_actual = []
@@ -69,7 +73,7 @@ class CeldaScene:
         self.patron_mostrando = False
         self.seleccion_usuario = set()
         self.temporizador_patron = 0
-        self.tiempo_mostrar = 2000  # ms
+        self.tiempo_mostrar = 2000  # milisegundos para mostrar
 
     def on_enter(self):
         """Se llama automáticamente al entrar a la escena para reiniciar el estado."""
@@ -119,7 +123,7 @@ class CeldaScene:
         elif self.current_index == 2 and not self.patron_mostrando:
             self.handle_event_rellena(event)
 
-    # ===== Ejercicio 1: Explora la celda =====
+    # Ejercicio 1: Explora la celda
     def handle_event_explora(self, event):
         """
         Guarda qué punto tocó el usuario.
@@ -131,26 +135,30 @@ class CeldaScene:
                     self.last_clicked = i + 1
                     self.tocados.add(i + 1)
 
-    # ===== Ejercicio 2: Toca el punto indicado =====
+    # Ejercicio 2: Toca el punto indicado
     def handle_event_reconoce(self, event):
         """
         Muestra un número objetivo y evalúa si el punto tocado coincide.
         Se completan 5 rondas para finalizar el ejercicio.
         """
         if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+            if self.feedback_mostrado:
+                return  # No aceptar clicks mientras mostramos feedback
+
             for i, (x, y) in enumerate(self.puntos):
                 if pygame.Rect(x - 20, y - 20, 40, 40).collidepoint(event.pos):
                     if (i + 1) == self.objetivo:
                         self.aciertos += 1
                         self.mostrar_feedback = "¡Correcto!"
-                        if self.aciertos >= self.total_objetivos and self.estado != "completado":
-                            self.mostrar_popup("Toca el punto correcto")
-                        else:
-                            self.objetivo = random.randint(1, 6)
                     else:
                         self.mostrar_feedback = "Intenta otra vez"
 
-    # ===== Ejercicio 3: Rellena la celda =====
+                    # Siempre mostramos feedback
+                    self.feedback_mostrado = True
+                    self.feedback_timer = 1.0  # 1 segundo para mostrar
+
+
+    # Ejercicio 3: Rellena la celda 
     def handle_event_rellena(self, event):
         """
         Muestra un patrón de puntos y espera que el usuario lo reproduzca.
@@ -184,7 +192,7 @@ class CeldaScene:
         self.popup = PopupMessage(
             self.screen,
             font_title=self.assets.fonts['big'],
-            font_text=self.assets.fonts['default'],
+            font_text=self.assets.fonts['small'],
             title=title,
             message=message,
             on_close=lambda: setattr(self, "popup", None),
@@ -200,13 +208,25 @@ class CeldaScene:
             if self.temporizador_patron <= 0:
                 self.patron_mostrando = False
                 self.seleccion_usuario.clear()
+        if self.feedback_mostrado:
+            self.feedback_timer -= dt
+            if self.feedback_timer <= 0:
+                self.feedback_mostrado = False
+                if "Correcto" in self.mostrar_feedback:
+                    if self.aciertos >= self.total_objetivos:
+                        if self.estado != "completado":
+                            self.mostrar_popup("Toca el punto correcto")
+                    else:
+                        self.objetivo = random.randint(1, 6)
+                self.mostrar_feedback = ""
+
 
     def draw(self):
         """
         Dibuja toda la escena: fondo, botones, ejercicios y mensajes.
         """
         self.screen.fill((13, 59, 102))
-        draw_text_centered(self.screen, self.ejercicios[self.current_index], self.assets.fonts['big'], 30, color=BLANCO)
+        draw_text_centered(self.screen, self.ejercicios[self.current_index], self.assets.fonts['default'], 30, color=BLANCO)
 
         if self.current_index == 0:
             self.draw_explora()
@@ -234,18 +254,22 @@ class CeldaScene:
             draw_circle_with_label(self.screen, (x, y), 30, str(i + 1), self.assets.fonts['default']) #tamaño de los puntos
 
         if self.last_clicked is not None:
-            draw_text_centered(self.screen, f"Tocaste el punto {self.last_clicked}", self.assets.fonts['default'], HEIGHT - 40, (250, 240, 202))
+            draw_text_centered(self.screen, f"Tocaste el punto {self.last_clicked}", self.assets.fonts['small'], y=280, color=AMARILLO_PASTEL)
 
         if len(self.tocados) == 6 and self.estado != "completado":
             self.mostrar_popup("Explora la celda")
 
     def draw_reconoce(self):
         for i, (x, y) in enumerate(self.puntos):
-            draw_circle_with_label(self.screen, (x, y), 30, str(i + 1), self.assets.fonts['default']) #tamaño de los puntos
-        draw_text_centered(self.screen, f"Toca el punto {self.objetivo}", self.assets.fonts['default'], HEIGHT - 80, (250, 240, 202))
-        if self.mostrar_feedback:
-            color = (0, 200, 0) if "Correcto" in self.mostrar_feedback else (250, 120, 120)
-            draw_text_centered(self.screen, self.mostrar_feedback, self.assets.fonts['default'], HEIGHT - 40, color)
+            draw_circle_with_label(self.screen, (x, y), 30, str(i + 1), self.assets.fonts['default'])
+
+        if not self.feedback_mostrado:
+            # Solo mostrar el objetivo si no estamos mostrando feedback
+            draw_text_centered(self.screen, f"Toca el punto {self.objetivo}", self.assets.fonts['small'], y=280, color=AMARILLO_PASTEL)
+        else:
+            # Mostrar el feedback durante la pausa
+            color = VERDE if "Correcto" in self.mostrar_feedback else NARANJA
+            draw_text_centered(self.screen, self.mostrar_feedback, self.assets.fonts['small'], y=280, color=color)
 
     def draw_rellena(self):
         for i, (x, y) in enumerate(self.puntos):

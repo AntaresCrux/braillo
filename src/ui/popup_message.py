@@ -5,7 +5,7 @@ class PopupMessage:
                  color_bg=(255, 245, 210), color_text=(0, 0, 0),
                  btn_texts=("Cerrar", "Siguiente"),
                  on_close=None, on_next=None,
-                 show_next=True):  # ← NUEVO
+                 show_next=True): 
         self.screen = screen
         self.font_title = font_title
         self.font_text = font_text
@@ -15,7 +15,7 @@ class PopupMessage:
         self.color_text = color_text
         self.on_close = on_close
         self.on_next = on_next
-        self.show_next = show_next  # ← NUEVO
+        self.show_next = show_next 
 
         self.visible = False
         self.width = 400
@@ -46,7 +46,7 @@ class PopupMessage:
             "action": self.on_close
         })
 
-        # Botón de siguiente (si está habilitado)
+        # Botón de siguiente si está habilitado
         if self.show_next:
             self.buttons.append({
                 "text": texts[1],
@@ -69,8 +69,8 @@ class PopupMessage:
                 if btn['rect'].collidepoint(event.pos):
                     if btn['action']:
                         btn['action']()
-                    self.hide() # Ocultamos el popup después de hacer clic en un botón
-                    return "close"  # ahora sí avisamos que se puede cerrar
+                    self.hide() # Ocultamos después de hacer clic en un boton
+                    return "close"  #aqui se puede cerrar
                 
     def draw(self):
         if not self.visible:

@@ -23,12 +23,12 @@ class SelectLevel:
 
         # Nodos del nivel básico (pos x, y, id único)
         self.nodos = [
-            (100, 180, "celdas"),
+            (100, 80, "celdas"),
             (350, 120, "alfabeto"),
-            (600, 200, "mayusculas"),
-            (850, 140, "numeros"),
-            (1100, 210, "signos"),
-            (1350, 130, "desfinal")
+            (600, 80, "mayusculas"),
+            (850, 120, "numeros"),
+            (1100, 80, "signos"),
+            (1350, 120, "desfinal")
         ]
 
         self.completed_levels = self._detectar_niveles_completos()

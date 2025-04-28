@@ -20,8 +20,7 @@ class NumerosScene:
         self.ejercicios = [
             "Aprende el prefijo",
             "Traduce números",
-            "Escribe un número",
-            "Numeración rápida"
+            "Escribe un número"
         ]
         self.current_index = 0
         self.estado = "en_curso"
@@ -40,7 +39,7 @@ class NumerosScene:
         self.back_icon_rect = self.back_icon.get_rect(topleft=(10, HEIGHT - 70))
 
         self.sidebar = SidebarMenu(
-            labels=["Aprende", "Traduce", "Escribe", "Quiz"],
+            labels=["Aprende", "Traduce", "Escribe"],
             font=self.assets.fonts['small'],
             width=240,
             height=HEIGHT
@@ -190,7 +189,7 @@ class NumerosScene:
             font_title=self.assets.fonts['big'],
             font_text=self.assets.fonts['tiny'],
             title="¡Muy bien!",
-            message="Los puntos 3, 4, 5 y 6 forman el prefijo de número en Braille.",
+            message="Los puntos 3, 4, 5 y 6 forman el prefijo de número.",
             on_close=lambda: (self.progress.mark_exercise_done("basico_1", "numeros", "Aprende el prefijo"), self.next_exercise()),
             show_next=False
         )
@@ -213,7 +212,7 @@ class NumerosScene:
 
         if self.esperando_nuevo_numero_escribe:
             self.tiempo_validacion_escribe += dt
-            if self.tiempo_validacion_escribe >= 1:  # 1 segundo de espera
+            if self.tiempo_validacion_escribe >= 1:
                 if self.total_intentos_escribe >= 10:
                     self.mostrar_popup_final_escribe()
                 else:
@@ -291,13 +290,17 @@ class NumerosScene:
         update_and_draw_particles(self.particles, self.screen, dt=1/60)
 
         texto_instruccion = [
+            "En braille separamos los números",
+            "con el punto 3 para decimal y",
+            "el punto 4 para miles.",
             "¡Ahora es tu turno!",
             "Te mostraremos un número,",
             "y tú deberás escribirlo en Braille.",
+            "No olvides usar el prefijo de número.",
             "",
             "Toca 'Siguiente' para comenzar."
         ]
-        draw_multiline_centered(self.screen, texto_instruccion, self.assets.fonts['small'], y_start=HEIGHT//4, line_spacing=25)
+        draw_multiline_centered(self.screen, texto_instruccion, self.assets.fonts['small'], y_start=49, line_spacing=25)
 
         draw_pulsing_button(
             self.screen,
@@ -435,6 +438,17 @@ class NumerosScene:
             color=BLANCO
         )
 
+        # --- Mostrar progreso ---
+        draw_progress_text(
+            surface=self.screen,
+            font=self.assets.fonts['tiny'],
+            current=self.total_intentos_escribe,
+            total=10,
+            x=334,
+            y=30,
+            color=AMARILLO_PASTEL
+        )
+
         # --- 2. Mostrar "Respuesta" o "Correcto/Incorrecto" con color dinámico ---
         if self.estado_validacion_escribe:
             texto_respuesta = self.mensaje_resultado_escribe
@@ -475,6 +489,9 @@ class NumerosScene:
             self.screen.blit(img, rect.topleft)
 
             self.rects_fichas[ficha] = rect
+            # Dibujar borde si seleccionado
+            #if ficha == self.ficha_seleccionada:
+                #pygame.draw.rect(self.screen, AMARILLO_PASTEL, rect.inflate(6, 6), 3)
 
         # --- AGREGAR ESTA PARTE ---
         self.palomita_rect = self.check_icon.get_rect(topright=(WIDTH - 10, HEIGHT - 70))
@@ -661,11 +678,23 @@ class NumerosScene:
     def terminar_escribe(self):
         if self.aciertos_escribe >= 7:
             self.progress.mark_exercise_done("basico_1", "numeros", "Escribe un número")
-            self.current_index = 3  # Avanza al siguiente ejercicio (Quiz)
+            self.mostrar_popup_seccion_completada()
         else:
             self.current_index = 2  # Repite Escribe un número
+            self.reset_state()
 
-        self.reset_state()
+
+    def mostrar_popup_seccion_completada(self):
+        self.popup = PopupMessage(
+            self.screen,
+            font_title=self.assets.fonts['big'],
+            font_text=self.assets.fonts['small'],
+            title="¡Sección completada!",
+            message="¡Felicidades, completaste la sección de Números!",
+            on_close=lambda: "select_level",  # Para que regrese al menú
+            show_next=False
+        )
+        self.popup.show()
 
     def switch_exercise(self, index):
         self.current_index = index
@@ -675,6 +704,9 @@ class NumerosScene:
         if self.current_index < len(self.ejercicios) - 1:
             self.current_index += 1
             self.reset_state()
+        else:
+            self.mostrar_popup_seccion_completada()
+
 
     def reset_state(self):
         self.estado = "en_curso"
@@ -688,6 +720,14 @@ class NumerosScene:
             self.generar_nuevo_numero()
         elif self.current_index == 2:
             self.generar_nuevo_numero_escribe()
+
+            self.total_intentos_escribe = 0
+            self.aciertos_escribe = 0
+            self.ficha_seleccionada = []
+            self.estado_validacion_escribe = False
+            self.tiempo_validacion_escribe = 0
+            self.esperando_nuevo_numero_escribe = False
+
 
         self.puntos_seleccionados.clear()
         self.mensaje_resultado = ""
