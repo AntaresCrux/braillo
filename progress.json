@@ -11,6 +11,7 @@
             "Acierta con tiempo"
         ],
         "mayusculas": [
+<<<<<<< HEAD
             "Aprende el prefijo",
             "¿Minúscula o Mayúscula?",
             "Arma nombres propios",
@@ -19,6 +20,13 @@
         "numeros": [
             "Aprende el prefijo",
             "Traduce números"
+=======
+            "Descubre el prefijo"
+        ],
+        "letras": [
+            "Escribe la letra",
+            "Identifica la letra"
+>>>>>>> origin/MaguchiBranch
         ]
     }
 }

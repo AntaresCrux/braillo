@@ -12,6 +12,7 @@ from utils.settings import ASSETS_PATHS
 from core.music_manager import MusicManager
 from scenes.configurar import ConfigScene
 from scenes.mayuscula import MayusculasScene
+from src.scenes.Diccionario.diccionario import diccionario
 
 
 class BrailleApp:
@@ -28,6 +29,7 @@ class BrailleApp:
         self.state_manager.add_state("intro", Intro(self.assets))
         self.state_manager.add_state("menu", Menu(self.assets))
         self.state_manager.add_state("select_level", SelectLevel(self.assets, self.progress))
+        self.state_manager.add_state("diccionario", diccionario())
         self.state_manager.add_state("celdas", CeldaScene(self.assets, self.progress))
         self.state_manager.add_state("mayusculas", MayusculasScene(self.assets, self.progress))
         self.state_manager.add_state("numeros", NumerosScene(self.assets, self.progress))  # Cambiar a la escena de números
