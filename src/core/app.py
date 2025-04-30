@@ -15,6 +15,7 @@ from scenes.mayuscula import MayusculasScene
 from scenes.Diccionario.diccionario import diccionario
 from scenes.Alfabeto.LetraScene import LetraScene
 from scenes.signo import SignosScene  # Import SignoScene from its module
+from scenes.traductor import TraductorScene  # Import TraductorScene from its module
 
 class BrailleApp:
     def __init__(self):
@@ -37,7 +38,8 @@ class BrailleApp:
         self.state_manager.add_state("alfabeto", LetraScene(self.assets, self.progress))        
         self.state_manager.add_state("mayusculas", MayusculasScene(self.assets, self.progress))
         self.state_manager.add_state("numeros", NumerosScene(self.assets, self.progress))      
-        self.state_manager.add_state("signos", SignosScene(self.assets, self.progress))         
+        self.state_manager.add_state("signos", SignosScene(self.assets, self.progress))    
+        self.state_manager.add_state("desfinal", TraductorScene(self.assets))       
         self.state_manager.add_state("configurar", ConfigScene(self.assets, self.music_manager))
         self.state_manager.set_state("intro")                                                   #para probar desde el principio
 

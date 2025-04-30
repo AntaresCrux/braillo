@@ -71,9 +71,20 @@ class CeldaScene:
         self.patron_actual = []
         self.patron_aciertos = 0
         self.patron_mostrando = False
-        self.seleccion_usuario = set()
+        self.seleccion_usuario = []
+        #self.seleccion_usuario = set()
         self.temporizador_patron = 0
         self.tiempo_mostrar = 2000  # milisegundos para mostrar
+        self.patron_index = 0  # índice actual del patrón que se está mostrando
+        self.patron_timer = 0  # temporizador para cambiar de punto
+        self.delay_entre_puntos = 600  # ms entre cada punto
+        self.feedback_text = ""  # Texto actual a mostrar
+        self.feedback_timer = 0  # Temporizador para feedback
+        self.estado_juego = "esperando"  # Estados: 'esperando', 'mostrando', 'jugando', 'feedback'
+        self.aciertos_total = 0
+        self.errores_total = 0
+        self.rondas_jugadas = 0
+        self.max_rondas = 5
 
     def on_enter(self):
         """Se llama automáticamente al entrar a la escena para reiniciar el estado."""
@@ -157,25 +168,28 @@ class CeldaScene:
                     self.feedback_mostrado = True
                     self.feedback_timer = 1.0  # 1 segundo para mostrar
 
-
-    # Ejercicio 3: Rellena la celda 
+    # ===== Ejercicio 3: Rellena la celda =====
     def handle_event_rellena(self, event):
-        """
-        Muestra un patrón de puntos y espera que el usuario lo reproduzca.
-        Se deben completar 3 patrones distintos correctamente.
-        """
         if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+            if self.estado_juego != "jugando":
+                return  # Solo aceptar clics cuando toca jugar
+
             for i, (x, y) in enumerate(self.puntos):
                 if pygame.Rect(x - 20, y - 20, 40, 40).collidepoint(event.pos):
-                    self.seleccion_usuario.add(i + 1)
-                    if self.seleccion_usuario == set(self.patron_actual):
-                        self.patron_aciertos += 1
-                        if self.patron_aciertos >= 3:
-                            self.mostrar_popup("Rellena la celda", seccion_completa=True)
+                    if len(self.seleccion_usuario) < len(self.patron_actual):
+                        self.seleccion_usuario.append(i + 1)
+
+                    if len(self.seleccion_usuario) == len(self.patron_actual):
+                        if self.seleccion_usuario == self.patron_actual:
+                            self.feedback_text = "¡Correcto!"
+                            self.feedback_resultado = "correcto"
                         else:
-                            self.generar_patron()
-                    elif not set(self.patron_actual).issuperset(self.seleccion_usuario):
-                        self.seleccion_usuario.clear()
+                            self.feedback_text = "Incorrecto"
+                            self.feedback_resultado = "incorrecto"
+
+                        self.estado_juego = "feedback"
+                        self.feedback_timer = 0
+
 
     def mostrar_popup(self, ejercicio, seccion_completa=False):
         """
@@ -187,7 +201,7 @@ class CeldaScene:
         self.estado = "completado"
 
         title = "¡BIEN HECHO!" if not ya_completado else "¡Buen repaso!"
-        message = "Ejercicio completado" if not seccion_completa else "Sección completa"
+        message = "Ejercicio completado" if not seccion_completa else "Sección completada"
 
         self.popup = PopupMessage(
             self.screen,
@@ -203,12 +217,9 @@ class CeldaScene:
 
     def update(self, dt):
         self.sidebar.update(dt)
-        if self.current_index == 2 and self.patron_mostrando:
-            self.temporizador_patron -= dt * 1000
-            if self.temporizador_patron <= 0:
-                self.patron_mostrando = False
-                self.seleccion_usuario.clear()
-        if self.feedback_mostrado:
+
+        # --- Ejercicio 2: Actualización de feedback ---
+        if self.current_index == 1 and self.feedback_mostrado:
             self.feedback_timer -= dt
             if self.feedback_timer <= 0:
                 self.feedback_mostrado = False
@@ -219,6 +230,51 @@ class CeldaScene:
                     else:
                         self.objetivo = random.randint(1, 6)
                 self.mostrar_feedback = ""
+
+        # --- Ejercicio 3: Rellena la celda ---
+        if self.current_index == 2:
+            if self.estado_juego == "esperando":
+                self.feedback_text = "Memoriza la secuencia..."
+                self.feedback_timer += dt * 1000
+                if self.feedback_timer >= 800:
+                    self.estado_juego = "mostrando"
+                    self.feedback_text = ""
+                    self.patron_mostrando = True
+                    self.patron_index = 0
+                    self.patron_timer = 0
+
+            elif self.estado_juego == "mostrando":
+                self.patron_timer += dt * 1000
+                if self.patron_timer >= self.delay_entre_puntos:
+                    self.patron_timer = 0
+                    self.patron_index += 1
+
+                    if self.patron_index >= len(self.patron_actual):
+                        self.estado_juego = "jugando"
+                        self.patron_mostrando = False
+                        self.patron_index = 0
+                        self.seleccion_usuario.clear()
+                        self.feedback_text = "Reproduce la secuencia"
+
+            elif self.estado_juego == "feedback":
+                self.feedback_timer += dt * 1000
+                if self.feedback_timer >= 1500:
+                    self.feedback_text = ""
+                    if self.feedback_resultado == "correcto":
+                        self.aciertos_total += 1
+                    else:
+                        self.errores_total += 1
+
+                    self.rondas_jugadas += 1
+
+                    if self.rondas_jugadas >= self.max_rondas:
+                        self.estado_juego = "finalizado"
+                        self.mostrar_resultado_final()
+                        return  # salir de update para evitar bug del contador de aciertos
+                    else:
+                        self.generar_patron()
+                        self.estado_juego = "esperando"
+                        self.feedback_timer = 0
 
 
     def draw(self):
@@ -272,9 +328,38 @@ class CeldaScene:
             draw_text_centered(self.screen, self.mostrar_feedback, self.assets.fonts['small'], y=280, color=color)
 
     def draw_rellena(self):
+        """
+        Dibuja los puntos de la celda en el ejercicio de memoria visual.
+        Muestra uno a uno mientras se presenta el patrón.
+        """
         for i, (x, y) in enumerate(self.puntos):
-            color = (0, 150, 250) if self.patron_mostrando and (i + 1) in self.patron_actual else (255, 255, 255)
-            draw_circle_with_label(self.screen, (x, y), 30, str(i + 1), self.assets.fonts['default'], color=color) #tamaño de los puntos
+            punto_id = i + 1
+
+            if self.patron_mostrando:
+                if self.patron_index < len(self.patron_actual) and punto_id == self.patron_actual[self.patron_index]:
+                    color = AMARILLO_PASTEL
+                else:
+                    color = BLANCO
+            elif punto_id in self.seleccion_usuario:
+                color = VERDE
+            else:
+                color = BLANCO
+
+            draw_circle_with_label(self.screen, (x, y), 30, str(punto_id), self.assets.fonts['default'], color=color)
+
+        # Mostrar número de ronda si estamos en el ejercicio 3
+        if self.estado_juego in ("esperando", "mostrando", "jugando", "feedback"):
+            texto_ronda = f"Ronda {self.rondas_jugadas + 1} de {self.max_rondas}"
+            draw_text_centered(self.screen, texto_ronda, self.assets.fonts['tiny'], y=56, color=AMARILLO_PASTEL, x=320)
+
+        #Mostrar texto de guía o feedback con color correcto (fuera del for)
+        if self.feedback_text:
+            if self.estado_juego == "feedback":
+                color_texto = VERDE if self.feedback_resultado == "correcto" else NARANJA
+            else:
+                color_texto = BLANCO
+            draw_text_centered(self.screen, self.feedback_text, self.assets.fonts['small'], y=280, color=color_texto)
+
         if not self.patron_actual:
             self.generar_patron()
 
@@ -282,10 +367,42 @@ class CeldaScene:
         """
         Crea un nuevo patrón aleatorio para el ejercicio de memoria visual.
         """
-        self.patron_actual = random.sample(range(1, 7), 3)
+        self.patron_actual = random.sample(range(1, 7), 4)
         self.patron_mostrando = True
         self.temporizador_patron = self.tiempo_mostrar
         self.seleccion_usuario.clear()
+
+    def mostrar_resultado_final(self):
+        """
+        Muestra popup final según el resultado tras 5 rondas.
+        Si aciertos >= 4, marca como completado. Si no, se repite la sección.
+        """
+        aprobado = self.aciertos_total >= 4
+        mensaje = f"Aciertos: {self.aciertos_total} de {self.max_rondas}"
+        titulo = "¡BIEN HECHO!" if aprobado else "¡REINTENTALO!"
+        completado = aprobado
+
+        self.popup = PopupMessage(
+            self.screen,
+            font_title=self.assets.fonts['big'],
+            font_text=self.assets.fonts['small'],
+            title=titulo,
+            message=mensaje,
+            on_close=self._cerrar_popup_si_aprobado if completado else self.reiniciar_ejercicio,
+            on_next=None,
+            show_next=False
+        )
+
+        self.popup.show()
+
+        if completado:
+            self.progress.mark_exercise_done("basico_1", "celdas", "Rellena la celda")
+            self.estado = "completado"
+
+    def _cerrar_popup_si_aprobado(self):
+        self.popup = None
+        self.estado = "completado"
+        self.estado_juego = "finalizado"  # Asegura que no siga corriendo lógica de juego
 
     def switch_exercise(self, index):
         """
@@ -307,6 +424,18 @@ class CeldaScene:
             self.current_index -= 1
             self.reset_state()
 
+    def reiniciar_ejercicio(self):
+        self.aciertos_total = 0
+        self.errores_total = 0
+        self.rondas_jugadas = 0
+        self.patron_actual = []
+        self.seleccion_usuario.clear()
+        self.estado_juego = "esperando"
+        self.feedback_text = ""
+        self.feedback_resultado = ""
+        self.popup = None
+
+
     def reset_state(self):
         """
         Reinicia variables comunes entre ejercicios para evitar conflictos.
@@ -322,3 +451,12 @@ class CeldaScene:
         self.patron_aciertos = 0
         self.seleccion_usuario.clear()
         self.patron_mostrando = False
+        self.patron_index = 0  # índice actual del patrón que se está mostrando
+        self.patron_timer = 0  # temporizador para cambiar de punto
+        self.delay_entre_puntos = 600  # ms entre cada punto
+        self.feedback_text = ""  # Texto actual a mostrar
+        self.feedback_timer = 0  # Temporizador para feedback
+        self.estado_juego = "esperando"  # Estados: 'esperando', 'mostrando', 'jugando', 'feedback'
+        self.rondas_jugadas = 0
+        self.max_rondas = 5
+

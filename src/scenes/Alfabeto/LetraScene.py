@@ -138,8 +138,8 @@ class LetraScene:
                         self.screen,
                         font_title=self.assets.fonts['big'],
                         font_text=self.assets.fonts['small'],
-                        title="¡Final!",
-                        message="¡Has terminado los ejercicios de acomodar!",
+                        title="¡BIEN HECHO!",
+                        message="¡Sección completada!",
                         on_close=self.terminar_popup_final_acomoda,
                         on_next=None,
                         show_next=False  # ocultamos el botón
@@ -459,13 +459,13 @@ class LetraScene:
         self.progress.mark_exercise_done("basico_1", "letras", ejercicio)
 
         mensaje = f"¡Correcto! Era la letra {self.objetivo_letra.upper()}" if ejercicio == "Identifica la letra" \
-            else "Has escrito correctamente la letra"
+            else "Letra escrita correctamente"
 
         self.popup = PopupMessage(
             self.screen,
             font_title=self.assets.fonts['big'],
             font_text=self.assets.fonts['small'],
-            title="¡Bien hecho!",
+            title="¡BIEN HECHO!",
             message=mensaje,
             on_close=self.terminar_popup,
             on_next=None,

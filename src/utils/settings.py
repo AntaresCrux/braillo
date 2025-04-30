@@ -21,7 +21,10 @@ ASSETS_PATHS = {
         'check': "assets/images/icono_correcto.png",
         'menu': "assets/images/icono_menu.png",
         'musica_on': "assets/images/icono_volum.png",
-        'musica_off': "assets/images/icono_vol_mute.png"
+        'musica_off': "assets/images/icono_vol_mute.png",
+        'info': "assets/images/icono_creditos.png",
+        'traducir': "assets/images/boton_traduce.png",
+        'limpiar': "assets/images/boton_limpia.png",
     },
     'images': {
         'world_map': "assets/images/mapa.png",
@@ -74,5 +77,12 @@ def load_fonts():
         'default': pygame.font.Font(ASSETS_PATHS['font'], 32),
         'large': pygame.font.Font(ASSETS_PATHS['font'], 40),
         'big': pygame.font.Font(ASSETS_PATHS['font'], 48),
-        'huge': pygame.font.Font(ASSETS_PATHS['font'], 64)
+        'huge': pygame.font.Font(ASSETS_PATHS['font'], 64),
+
+        # Fuente Braille ONCE
+        'braille_tiny': pygame.font.Font(ASSETS_PATHS['braille_font'], 16),
+        'braille_small': pygame.font.Font(ASSETS_PATHS['braille_font'], 22),
+        'braille_default': pygame.font.Font(ASSETS_PATHS['braille_font'], 32),
+        'braille_big': pygame.font.Font(ASSETS_PATHS['braille_font'], 48),
+        'braille_huge': pygame.font.Font(ASSETS_PATHS['braille_font'], 64),
     }

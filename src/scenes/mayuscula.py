@@ -222,8 +222,8 @@ class MayusculasScene:
             self.screen,
             font_title=self.assets.fonts['big'],
             font_text=self.assets.fonts['small'],
-            title="¡Muy bien!",
-            message="Los puntos 4 y 6 forman el prefijo.",
+            title="¡BIEN HECHO!",
+            message="Los puntos 4 y 6 crean el prefijo.",
             on_close=lambda: (self.progress.mark_exercise_done("basico_1", "mayusculas", "Aprende el prefijo"), self.next_exercise()),
             show_next=False
         )
@@ -236,8 +236,8 @@ class MayusculasScene:
                 self.screen,
                 font_title=self.assets.fonts['big'],
                 font_text=self.assets.fonts['small'],
-                title="¡Excelente!",
-                message="¡Completaste el reto!",
+                title="¡BIEN HECHO!",
+                message="¡Ejercicio completado!",
                 on_close=lambda: (self.progress.mark_exercise_done("basico_1", "mayusculas", "¿Minúscula o Mayúscula?"), self.next_exercise()),
                 show_next=False
             )
@@ -252,8 +252,8 @@ class MayusculasScene:
                 self.screen,
                 font_title=self.assets.fonts['big'],
                 font_text=self.assets.fonts['small'],
-                title="¡Muy bien!",
-                message="¡Completaste el ejercicio!",
+                title="¡BIEN HECHO!",
+                message="¡Ejercicio completado!",
                 on_close=lambda: (self.progress.mark_exercise_done("basico_1", "mayusculas", "Arma nombres propios"), self.next_exercise()),
                 show_next=False
             )
@@ -268,8 +268,8 @@ class MayusculasScene:
                 self.screen,
                 font_title=self.assets.fonts['big'],
                 font_text=self.assets.fonts['small'],
-                title="¡Excelente!",
-                message="¡Terminaste el reto de siglas!",
+                title="¡BIEN HECHO!",
+                message="Ejercicio completado",
                 on_close=lambda: self._mostrar_popup_final(),
                 show_next=False
             )
@@ -284,7 +284,7 @@ class MayusculasScene:
             font_title=self.assets.fonts['big'],
             font_text=self.assets.fonts['small'],
             title="¡Felicidades!",
-            message="Has completado toda la sección de MAYÚSCULAS.\n\n¡Gran trabajo!",
+            message="Sección completada",
             on_close=lambda: self.switch_exercise(0),
             show_next=False
         )
@@ -297,7 +297,7 @@ class MayusculasScene:
                 font_title=self.assets.fonts['big'],
                 font_text=self.assets.fonts['small'],
                 title="¡Ánimo!",
-                message="Recuerda: las mayúsculas llevan prefijo (puntos 4 y 6).\n¡Sigue practicando!",
+                message="Recuerda: el prefijo son los puntos 4 y 6.",
                 on_close=lambda: self._reiniciar_errores(),
                 show_next=False
             )

@@ -17,6 +17,6 @@ AMARILLO_PASTEL = (244, 211, 94)  # #F4D35E
 NARANJA = (238, 150, 75)          # #EE964B
 ROJO_ANARANJADO = (249, 87, 56)   # #F95738
 
+NEGRO = (0, 0, 0)                # #000000
 VERDE = (0, 255, 0)
 ROJO = (255, 0, 0)
-

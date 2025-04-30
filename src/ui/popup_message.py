@@ -1,8 +1,9 @@
 import pygame
+from utils.colors import AMARILLO_PASTEL, NEGRO, CREMA_CLARO, ROJO_ANARANJADO
 
 class PopupMessage:
     def __init__(self, screen, font_title, font_text, title, message,
-                 color_bg=(255, 245, 210), color_text=(0, 0, 0),
+                 color_bg=CREMA_CLARO, color_title=ROJO_ANARANJADO, color_message=NEGRO,
                  btn_texts=("Cerrar", "Siguiente"),
                  on_close=None, on_next=None,
                  show_next=True): 
@@ -12,7 +13,8 @@ class PopupMessage:
         self.title = title
         self.message = message
         self.color_bg = color_bg
-        self.color_text = color_text
+        self.color_title = color_title
+        self.color_message = color_message
         self.on_close = on_close
         self.on_next = on_next
         self.show_next = show_next 
@@ -77,15 +79,16 @@ class PopupMessage:
             return
 
         pygame.draw.rect(self.screen, self.color_bg, self.rect, border_radius=20)
+        pygame.draw.rect(self.screen, AMARILLO_PASTEL, self.rect, width=6, border_radius=20)
 
-        title_surf = self.font_title.render(self.title, True, self.color_text)
-        msg_surf = self.font_text.render(self.message, True, self.color_text)
+        title_surf = self.font_title.render(self.title, True, self.color_title)
+        msg_surf = self.font_text.render(self.message, True, self.color_message)
 
         self.screen.blit(title_surf, (self.rect.centerx - title_surf.get_width() // 2, self.rect.top + 30))
         self.screen.blit(msg_surf, (self.rect.centerx - msg_surf.get_width() // 2, self.rect.top + 80))
 
         for btn in self.buttons:
             pygame.draw.rect(self.screen, (249, 209, 84), btn['rect'], border_radius=20)
-            text = self.font_text.render(btn['text'], True, (0, 0, 0))
+            text = self.font_text.render(btn['text'], True, ROJO_ANARANJADO)
             text_rect = text.get_rect(center=btn['rect'].center)
             self.screen.blit(text, text_rect)
