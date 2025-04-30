@@ -14,8 +14,8 @@ from scenes.configurar import ConfigScene
 from scenes.mayuscula import MayusculasScene
 from scenes.Diccionario.diccionario import diccionario
 from scenes.Alfabeto.LetraScene import LetraScene
-from scenes.signo import SignosScene  # Import SignoScene from its module
-from scenes.traductor import TraductorScene  # Import TraductorScene from its module
+from scenes.signo import SignosScene  
+from scenes.traductor import TraductorScene  
 
 class BrailleApp:
     def __init__(self):
@@ -41,7 +41,7 @@ class BrailleApp:
         self.state_manager.add_state("signos", SignosScene(self.assets, self.progress))    
         self.state_manager.add_state("desfinal", TraductorScene(self.assets))       
         self.state_manager.add_state("configurar", ConfigScene(self.assets, self.music_manager))
-        self.state_manager.set_state("intro")                                                   #para probar desde el principio
+        self.state_manager.set_state("intro")                                                   
 
     def run(self):
         running = True
