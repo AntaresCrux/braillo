@@ -1,9 +1,7 @@
 import pygame
 import sys
-from src.utils import colors
-from src.utils.settings import WIDTH, HEIGHT, ASSETS_PATHS
-
-
+from utils import colors
+from utils.settings import WIDTH, HEIGHT, ASSETS_PATHS
 
 class diccionario:
     def __init__(self, screen_width=480, screen_height=320, scroll_speed=10):
@@ -91,7 +89,7 @@ class diccionario:
                     btn_img = pygame.image.load(f"assets/images/{btn['image']}").convert_alpha()
                     btn["img_surface"] = pygame.transform.scale(btn_img, (btn["rect"].width, btn["rect"].height))
                 except:
-                    print(f"⚠️ Imagen del botón '{btn['image']}' no encontrada.")
+                    print(f"Imagen del botón '{btn['image']}' no encontrada.")
                     btn["img_surface"] = None
             else:
                 btn["img_surface"] = None
@@ -108,6 +106,8 @@ class diccionario:
 
     def handle_event(self, event):
         if event.type == pygame.MOUSEBUTTONDOWN:
+            if self.back_icon_rect.collidepoint(event.pos):
+                return "menu"  #señal para regresar
             self.last_y = event.pos[1]
             self.is_dragging = True
             for btn in self.buttons:
@@ -131,6 +131,7 @@ class diccionario:
     def draw(self):
         self.screen.fill(self.bg_color)
         self.draw_buttons()
+        self.screen.blit(self.back_icon, self.back_icon_rect)
         self.screen.blit(
             self.active_image,
             (self.LEFT_MARGIN, self.TOP_MARGIN),

@@ -7,12 +7,15 @@ from scenes.intro import Intro
 from scenes.menu import Menu
 from scenes.select_level import SelectLevel
 from scenes.celda import CeldaScene
+from scenes.numero import NumerosScene
 from utils.settings import ASSETS_PATHS
 from core.music_manager import MusicManager
 from scenes.configurar import ConfigScene
 from scenes.mayuscula import MayusculasScene
-from src.scenes.Diccionario.diccionario import diccionario
-
+from scenes.Diccionario.diccionario import diccionario
+from scenes.Alfabeto.LetraScene import LetraScene
+from scenes.signo import SignosScene  # Import SignoScene from its module
+from scenes.traductor import TraductorScene  # Import TraductorScene from its module
 
 class BrailleApp:
     def __init__(self):
@@ -23,20 +26,22 @@ class BrailleApp:
         self.assets = AssetsManager()
         self.progress = ProgressManager()
         self.state_manager = StateManager()
+        self.music_manager = MusicManager(ASSETS_PATHS['music']) 
+        self.music_manager.play_music()  
 
-        self.state_manager.add_state("intro", Intro(self.assets))
+        # Agregamos estados:
         self.state_manager.add_state("menu", Menu(self.assets))
+        self.state_manager.add_state("intro", Intro(self.assets))
         self.state_manager.add_state("select_level", SelectLevel(self.assets, self.progress))
         self.state_manager.add_state("diccionario", diccionario())
         self.state_manager.add_state("celdas", CeldaScene(self.assets, self.progress))
+        self.state_manager.add_state("alfabeto", LetraScene(self.assets, self.progress))        
         self.state_manager.add_state("mayusculas", MayusculasScene(self.assets, self.progress))
-        #self.state_manager.add_state("configurar", ConfigScene(self.assets, self.progress, self.music_manager))
-        self.state_manager.set_state("intro") #para probar desde el principio
-
-        self.music_manager = MusicManager(ASSETS_PATHS['music'])
-        self.music_manager.play_music()
-
+        self.state_manager.add_state("numeros", NumerosScene(self.assets, self.progress))      
+        self.state_manager.add_state("signos", SignosScene(self.assets, self.progress))    
+        self.state_manager.add_state("desfinal", TraductorScene(self.assets))       
         self.state_manager.add_state("configurar", ConfigScene(self.assets, self.music_manager))
+        self.state_manager.set_state("alfabeto")                                                   #para probar desde el principio
 
     def run(self):
         running = True
@@ -57,7 +62,7 @@ class BrailleApp:
 
             if isinstance(result, str) and result in self.state_manager.states:
                 self.state_manager.set_state(result)
-                # Llama on_enter() si la escena tiene ese método
+                # Se llama a on_enter() si la escena tiene este metodo
                 state = self.state_manager.states[result]
                 if hasattr(state, "on_enter"):
                     state.on_enter()

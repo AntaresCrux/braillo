@@ -2,6 +2,7 @@ import pygame
 from PIL import Image, ImageSequence
 from pathlib import Path
 from utils.settings import ASSETS_PATHS, WIDTH, HEIGHT
+from utils.settings import load_fonts
 
 class AssetsManager:
     def __init__(self):
@@ -10,6 +11,7 @@ class AssetsManager:
         self.gif_size = (0, 0)
         self.fonts = {}
         self.images = {}
+        self.fichas = {}
         self.load_assets()
 
     def load_assets(self):
@@ -17,6 +19,7 @@ class AssetsManager:
         self._load_gif()
         self._load_fonts()
         self._load_images()
+        self._load_fichas()
 
     def _load_images(self):
         for name, path in ASSETS_PATHS.get('images', {}).items():
@@ -30,12 +33,9 @@ class AssetsManager:
 
     def _load_fonts(self):
         try:
-            font_path = ASSETS_PATHS['font']
-            self.fonts['default'] = pygame.font.Font(font_path, 24)
-            self.fonts['big'] = pygame.font.Font(font_path, 32)
-            self.fonts["giant"] = pygame.font.Font(font_path, 160)
+            self.fonts = load_fonts()
         except Exception as e:
-            print(f"Error loading font: {e}")
+            print(f"Error loading fonts: {e}")
 
     def _load_gif(self):
         try:
@@ -74,3 +74,27 @@ class AssetsManager:
 
     def get_gif_position(self):
         return ((WIDTH - self.gif_size[0]) // 2, (HEIGHT - self.gif_size[1]) // 2) if self.gif_size else (0, 0)
+
+    def _load_fichas(self):
+        # Cargamos el prefijo
+        try:
+            self.fichas["prefijo"] = pygame.image.load(ASSETS_PATHS['fichas']['prefijo']).convert_alpha()
+        except Exception as e:
+            print(f"Error loading ficha prefijo: {e}")
+
+        # Cargamos los números
+        for num, path in ASSETS_PATHS['fichas']['numeros'].items():
+            try:
+                self.fichas[num] = pygame.image.load(path).convert_alpha()
+            except Exception as e:
+                print(f"Error loading ficha numero {num}: {e}")
+
+        # Cargar separadores de numeros (decimal/miles)
+        for sep, path in ASSETS_PATHS['fichas']['separadores'].items():
+            try:
+                if sep == "miles":
+                    self.fichas[","] = pygame.image.load(path).convert_alpha()
+                elif sep == "decimal":
+                    self.fichas["."] = pygame.image.load(path).convert_alpha()
+            except Exception as e:
+                print(f"Error loading ficha separador {sep}: {e}")

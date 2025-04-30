@@ -7,7 +7,7 @@ from utils.estructura_basico import estructura_basico
 
 def simular_completar_seccion(nivel_id, seccion_id):
     """
-    Marca todos los ejercicios de una sección como completados en el progress.json
+    Aquí marcamos todos los ejercicios de una sección como completados en el progress.json
     """
     pm = ProgressManager()
 
@@ -23,8 +23,8 @@ def simular_completar_seccion(nivel_id, seccion_id):
     print(f"Sección '{seccion_id}' del nivel '{nivel_id}' simulada como completada.")
 
 if __name__ == "__main__":
-    # Aquí cambias los valores para simular otra sección
+    # Aquí cambiamos los valores para simular otra sección
     nivel_id = "basico_1"
-    seccion_id = "alfabeto"  # <<< Simulamos completar "mayusculas"
+    seccion_id = "alfabeto" #Sección a simular
     
     simular_completar_seccion(nivel_id, seccion_id)

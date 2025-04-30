@@ -2,10 +2,10 @@ import pygame
 import random
 import json
 from utils.settings import WIDTH, HEIGHT, ASSETS_PATHS
+from utils.colors import BLANCO
 from ui.ui_helpers import draw_text_centered, draw_circle_with_label
 from ui.sidebar_menu import SidebarMenu
 from ui.popup_message import PopupMessage
-
 
 class LetraScene:
     def __init__(self, assets, progress):
@@ -23,7 +23,7 @@ class LetraScene:
         self.last_touch_time = pygame.time.get_ticks()
         self.inactividad_timeout = 5000  # 3 segundos de inactividad
         self.inactividad_detectada = False
-        self.evaluar_button_escribe = pygame.Rect(WIDTH // 2 - 50, HEIGHT // 2 - -80, 90, 35)
+        self.evaluar_button_escribe = pygame.Rect(130, 250, 150, 40)
 
         self.ejercicios = ["Escribe la letra", "Identifica la letra", "Acomoda la letra"]
         self.current_index = 0
@@ -44,8 +44,8 @@ class LetraScene:
 
         self.sidebar = SidebarMenu(
             labels=["Escribe", "Identifica", "Acomoda"],
-            font=self.assets.fonts['default'],
-            width=160,
+            font=self.assets.fonts['small'],
+            width=240,
             height=HEIGHT
         )
 
@@ -91,7 +91,7 @@ class LetraScene:
                 self.sidebar.toggle()
                 return
             if self.back_icon_rect.collidepoint(event.pos):
-                return "menu"
+                return "select_level"
 
         if self.current_index == 0:
             self.handle_event_escribe(event)
@@ -114,10 +114,10 @@ class LetraScene:
                 if pygame.Rect(x - 20, y - 20, 40, 40).collidepoint(event.pos):
                     punto = i + 1
                     if punto in self.seleccion_usuario:
-                        # 🔄 Si ya estaba seleccionado, quitarlo (corregir)
+                        # Si ya estaba seleccionado, quitarlo (corregir)
                         del self.seleccion_usuario[punto]
                     else:
-                        # 🔵 Si no estaba seleccionado, marcarlo
+                        # Si no estaba seleccionado, marcarlo
                         correcto = punto in self.objetivo_puntos
                         self.seleccion_usuario[punto] = "correcto" if correcto else "incorrecto"
 
@@ -127,16 +127,16 @@ class LetraScene:
         correctos = set(self.objetivo_puntos)
 
         if seleccionados == correctos:
-            mensaje = "¡Correcto! Has escrito bien la letra."
+            mensaje = "Has escrito bien la letra."
             self.escribe_aciertos += 1
         else:
-            mensaje = "¡Incorrecto! No escribiste bien la letra."
+            mensaje = "No escribiste bien la letra."
 
         self.popup = PopupMessage(
             self.screen,
-            font_title=self.assets.fonts['default'],
-            font_text=self.assets.fonts['default'],
-            title="Resultado",
+            font_title=self.assets.fonts['big'],
+            font_text=self.assets.fonts['small'],
+            title="RESULTADO",
             message=mensaje,
             on_close=self.terminar_popup,
             on_next=None,
@@ -178,20 +178,20 @@ class LetraScene:
                 if es_final:
                     self.popup = PopupMessage(
                         self.screen,
-                        font_title=self.assets.fonts['default'],
-                        font_text=self.assets.fonts['default'],
-                        title="¡Final!",
-                        message="¡Has terminado los ejercicios de acomodar!",
-                        on_close=None,
-                        on_next=self.terminar_popup_final_acomoda,
-                        show_next=True
+                        font_title=self.assets.fonts['big'],
+                        font_text=self.assets.fonts['small'],
+                        title="¡BIEN HECHO!",
+                        message="¡Sección completada!",
+                        on_close=self.terminar_popup_final_acomoda,
+                        on_next=None,
+                        show_next=False  # ocultamos el botón
                     )
                 else:
                     self.popup = PopupMessage(
                         self.screen,
-                        font_title=self.assets.fonts['default'],
-                        font_text=self.assets.fonts['default'],
-                        title="Resultado",
+                        font_title=self.assets.fonts['big'],
+                        font_text=self.assets.fonts['small'],
+                        title="RESULTADO",
                         message=f"Tuviste {incorrectas} malas de {total}",
                         on_close=self.terminar_popup,
                         on_next=None,
@@ -206,7 +206,7 @@ class LetraScene:
 
     def draw(self):
         self.screen.fill((13, 59, 102))
-        draw_text_centered(self.screen, self.ejercicios[self.current_index], self.assets.fonts['default'], 30)
+        draw_text_centered(self.screen, self.ejercicios[self.current_index], self.assets.fonts['default'], 30, color=BLANCO)
 
         if self.current_index == 0:
             self.draw_escribe()
@@ -234,17 +234,17 @@ class LetraScene:
         ficha_image = pygame.transform.smoothscale(ficha_image, (160, 230))
         self.screen.blit(ficha_image, (WIDTH - 195, 70)) 
         # Render sombra (negra o gris oscura)
-        sombra = self.assets.fonts['giant'].render(self.objetivo_letra, True, (0, 0, 0))
+        sombra = self.assets.fonts['big'].render(self.objetivo_letra, True, (0, 0, 0))
         self.screen.blit(sombra, (92, HEIGHT // 2 - sombra.get_height() // 2 + 2))  # leve desplazamiento
 
         # Render texto principal (blanco)
-        letra_grande = self.assets.fonts['giant'].render(self.objetivo_letra, True, (255, 255, 255))
+        letra_grande = self.assets.fonts['big'].render(self.objetivo_letra, True, (255, 255, 255))
         self.screen.blit(letra_grande, (90, HEIGHT // 2 - letra_grande.get_height() // 2))
         # Mostrar progreso tipo "1 de 3"
         progreso_texto = f"{self.escribe_aciertos} / 3"
-        progreso_render = self.assets.fonts['default'].render(progreso_texto, True, (244, 211, 94))
-        progreso_x = WIDTH // 2 + 120
-        progreso_y = 30  # altura superior
+        progreso_render = self.assets.fonts['small'].render(progreso_texto, True, (244, 211, 94))
+        progreso_x = 390
+        progreso_y = 50  # altura superior
 
         self.screen.blit(progreso_render, (progreso_x, progreso_y))
 
@@ -255,7 +255,10 @@ class LetraScene:
                 color = (0, 200, 0)
             elif estado == "incorrecto":
                 color = (200, 0, 0)
-            draw_circle_with_label(self.screen, (x, y), 24, "", self.assets.fonts['giant'], color=color)
+
+        draw_circle_with_label(self.screen, (x, y), 24, "", self.assets.fonts['big'], color=color)
+
+        #draw_circle_with_label(self.screen, (x, y), 24, "", self.assets.fonts['giant'], color=color) mauricio
        # Mostrar barra de cuenta regresiva si está activo
         if not self.inactividad_detectada:
             elapsed = pygame.time.get_ticks() - self.last_touch_time
@@ -285,7 +288,6 @@ class LetraScene:
         texto_evaluar = self.assets.fonts['default'].render("Evaluar", True, (255, 255, 255))
         text_rect = texto_evaluar.get_rect(center=self.evaluar_button_escribe.center)
         self.screen.blit(texto_evaluar, text_rect)
-
 
     def iniciar_identifica(self):
         self.objetivo_letra = random.choice(list(self.braille_map.keys()))
@@ -346,8 +348,8 @@ class LetraScene:
                     ficha["pos"][1] = mouse_y - offset_y
 
     def draw_identifica(self):
-        sombra = self.assets.fonts['giant'].render(self.objetivo_letra, True, (0, 0, 0))
-        letra_surface = self.assets.fonts['giant'].render(self.objetivo_letra, True, (255, 255, 255))
+        sombra = self.assets.fonts['big'].render(self.objetivo_letra, True, (0, 0, 0))
+        letra_surface = self.assets.fonts['big'].render(self.objetivo_letra, True, (255, 255, 255))
         centro_y = HEIGHT // 2 - 40
         self.screen.blit(sombra, (82, centro_y - sombra.get_height() // 2 + 2))
         self.screen.blit(letra_surface, (80, centro_y - letra_surface.get_height() // 2))
@@ -389,7 +391,7 @@ class LetraScene:
                 "letra": letra,
                 "imagen": pygame.transform.scale(img, (55, 65)),
                 "pos": pos[:],
-                "original_pos": pos.copy(),  # ← importante copiar por valor
+                "original_pos": pos.copy(),  # importante copiar por valor
                 "dragging": False,
                 "offset": (0, 0),
                 "slot": None
@@ -444,7 +446,7 @@ class LetraScene:
 
             # Verificar si todos los slots están llenos
             if None not in self.letras_colocadas:
-                print("⚠️ Todos los slots están llenos, evaluando...")
+                print("Todos los slots están llenos, evaluando...")
                 incorrectas = 0
                 for i, ficha_id in enumerate(self.letras_colocadas):
                     letra_correcta = self.letras_objetivo[i]
@@ -547,13 +549,13 @@ class LetraScene:
         self.progress.mark_exercise_done("basico_1", "letras", ejercicio)
 
         mensaje = f"¡Correcto! Era la letra {self.objetivo_letra.upper()}" if ejercicio == "Identifica la letra" \
-            else "Has escrito correctamente la letra"
+            else "Letra escrita correctamente"
 
         self.popup = PopupMessage(
             self.screen,
-            font_title=self.assets.fonts['default'],
-            font_text=self.assets.fonts['default'],
-            title="¡Bien hecho!",
+            font_title=self.assets.fonts['big'],
+            font_text=self.assets.fonts['small'],
+            title="¡BIEN HECHO!",
             message=mensaje,
             on_close=self.terminar_popup,
             on_next=None,
@@ -607,14 +609,9 @@ if __name__ == "__main__":
 
     pygame.init()
     screen = pygame.display.set_mode((WIDTH, HEIGHT))  # o usa WIDTH, HEIGHT
-
     assets = AssetsManager()
     progress = ProgressManager()
-
     scene = LetraScene(assets, progress)
-    #scene.current_index = 2
-    #scene.iniciar_acomoda()
-
     clock = pygame.time.Clock()
     running = True
 
@@ -625,7 +622,7 @@ if __name__ == "__main__":
                 running = False
             else:
                 result = scene.handle_event(event)
-                if result == "menu":
+                if result == "select_level":
                     running = False
 
         scene.update(dt)

@@ -3,7 +3,8 @@
         "celdas": [
             "Explora la celda",
             "Toca el punto correcto",
-            "Rellena la celda"
+            "Rellena la celda",
+            "Toca el punto indicado"
         ],
         "alfabeto": [
             "Empareja ficha",
@@ -11,11 +12,24 @@
             "Acierta con tiempo"
         ],
         "mayusculas": [
-            "Descubre el prefijo"
+            "Aprende el prefijo",
+            "¿Minúscula o Mayúscula?",
+            "Arma nombres propios",
+            "Aplica en siglas"
+        ],
+        "numeros": [
+            "Aprende el prefijo",
+            "Traduce números",
+            "Descubre el prefijo",
+            "Escribe un número"
         ],
         "letras": [
             "Escribe la letra",
             "Identifica la letra"
+        ],
+        "signos": [
+            "Reconocimiento de signos",
+            "Completar frases"
         ]
     }
 }

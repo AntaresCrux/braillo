@@ -20,7 +20,7 @@ estructura_basico = {
             "objetivo": "Identificar y usar correctamente el prefijo de mayúscula en Braille.",
             "ejercicios": [
                 {
-                    "nombre": "Descubre el prefijo",
+                    "nombre": "Aprende el prefijo",
                     "tipo": "exploración",
                     "descripcion": "Explora cómo se representa el prefijo de mayúscula (punto 6) en Braille."
                 },
@@ -46,15 +46,14 @@ estructura_basico = {
             "ejercicios": [
                 {"nombre": "Traduce números", "tipo": "traducción", "descripcion": "Convierte números en Braille con prefijo."},
                 {"nombre": "Escribe un número", "tipo": "escritura", "descripcion": "Reproduce el número mostrado usando Braille."},
-                {"nombre": "Numeración rápida", "tipo": "quiz", "descripcion": "Adivina qué letra representa cada número del 1 al 9."}
+                {"nombre": "Aprende el prefijo", "tipo": "exploración", "descripcion": "Explora cómo se representa el prefijo."}
             ]
         },
         "signos": {
             "objetivo": "Aprender signos básicos como punto, coma, interrogación, etc.",
             "ejercicios": [
-                {"nombre": "Coloca el signo", "tipo": "completar", "descripcion": "Ubica los signos correctos en frases simples."},
-                {"nombre": "Adivina el signo", "tipo": "identificación", "descripcion": "Reconoce el signo a partir de su Braille."},
-                {"nombre": "Clasifica signos", "tipo": "agrupamiento", "descripcion": "Separa los signos según su categoría."}
+                {"nombre": "Reconocimiento de signos", "tipo": "completar", "descripcion": "Ubica los signos correctos en frases simples."},
+                {"nombre": "Completar frases", "tipo": "identificación", "descripcion": "Reconoce el signo a partir de su Braille."},
             ]
         },
         "desfinal": {
