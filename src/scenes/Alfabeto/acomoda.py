@@ -22,6 +22,9 @@ class AcomodaLetra:
             return json.load(f)["palabras"]
 
     def iniciar_nueva_palabra(self):
+        self.popup = None
+        self.popup_timer = None
+        self.reset_drop_timer = None
         self.palabra_actual = random.choice(self.palabras).lower()
         self.letras_objetivo = list(self.palabra_actual)
         self.letras_colocadas = [None] * len(self.letras_objetivo)
@@ -47,6 +50,11 @@ class AcomodaLetra:
                 "offset": (0, 0),
                 "slot": None
             }
+        for ficha in self.fichas.values():
+            ficha["pos"] = ficha["original_pos"][:]
+            ficha["slot"] = None
+            ficha["dragging"] = False
+            ficha["offset"] = (0, 0)
 
     def handle_event(self, event):
         if self.popup:
