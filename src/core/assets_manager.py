@@ -3,6 +3,7 @@ from PIL import Image, ImageSequence
 from pathlib import Path
 from utils.settings import ASSETS_PATHS, WIDTH, HEIGHT
 from utils.settings import load_fonts
+from utils.memorama_paths import MEMORAMA_PATHS
 
 class AssetsManager:
     def __init__(self):
@@ -12,6 +13,7 @@ class AssetsManager:
         self.fonts = {}
         self.images = {}
         self.fichas = {}
+        self.memorama = {}
         self.load_assets()
 
     def load_assets(self):
@@ -20,6 +22,15 @@ class AssetsManager:
         self._load_fonts()
         self._load_images()
         self._load_fichas()
+        self._load_memorama()
+
+    def _load_memorama(self):
+        from utils.memorama_paths import MEMORAMA_PATHS  # asegúrate de tener esto importado
+        for name, path in MEMORAMA_PATHS.items():
+            try:
+                self.memorama[name] = pygame.image.load(path).convert_alpha()
+            except Exception as e:
+                print(f"Error loading memorama image '{name}': {e}")
 
     def _load_images(self):
         for name, path in ASSETS_PATHS.get('images', {}).items():

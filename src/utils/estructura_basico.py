@@ -25,19 +25,9 @@ estructura_basico = {
                     "descripcion": "Explora cómo se representa el prefijo de mayúscula (punto 6) en Braille."
                 },
                 {
-                    "nombre": "¿Minúscula o Mayúscula?",
+                    "nombre": "Memorama",
                     "tipo": "clasificación",
                     "descripcion": "Clasifica letras según si deben llevar o no el prefijo de mayúscula."
-                },
-                {
-                    "nombre": "Arma nombres propios",
-                    "tipo": "construcción",
-                    "descripcion": "Escribe nombres correctamente usando el prefijo de mayúscula."
-                },
-                {
-                    "nombre": "Aplica en siglas",
-                    "tipo": "transferencia",
-                    "descripcion": "Aplica el uso del prefijo de mayúscula en contextos de siglas y acrónimos."
                 }
             ]
         },
