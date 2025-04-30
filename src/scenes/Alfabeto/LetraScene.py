@@ -23,7 +23,7 @@ class LetraScene:
         self.last_touch_time = pygame.time.get_ticks()
         self.inactividad_timeout = 5000  # 3 segundos de inactividad
         self.inactividad_detectada = False
-        self.evaluar_button_escribe = pygame.Rect(WIDTH // 2 - 50, HEIGHT // 2 - -80, 90, 35)
+        self.evaluar_button_escribe = pygame.Rect(130, 250, 150, 40)
 
         self.ejercicios = ["Escribe la letra", "Identifica la letra", "Acomoda la letra"]
         self.current_index = 0
@@ -114,10 +114,10 @@ class LetraScene:
                 if pygame.Rect(x - 20, y - 20, 40, 40).collidepoint(event.pos):
                     punto = i + 1
                     if punto in self.seleccion_usuario:
-                        # 🔄 Si ya estaba seleccionado, quitarlo (corregir)
+                        # Si ya estaba seleccionado, quitarlo (corregir)
                         del self.seleccion_usuario[punto]
                     else:
-                        # 🔵 Si no estaba seleccionado, marcarlo
+                        # Si no estaba seleccionado, marcarlo
                         correcto = punto in self.objetivo_puntos
                         self.seleccion_usuario[punto] = "correcto" if correcto else "incorrecto"
 
@@ -127,16 +127,16 @@ class LetraScene:
         correctos = set(self.objetivo_puntos)
 
         if seleccionados == correctos:
-            mensaje = "¡Correcto! Has escrito bien la letra."
+            mensaje = "Has escrito bien la letra."
             self.escribe_aciertos += 1
         else:
-            mensaje = "¡Incorrecto! No escribiste bien la letra."
+            mensaje = "No escribiste bien la letra."
 
         self.popup = PopupMessage(
             self.screen,
-            font_title=self.assets.fonts['default'],
-            font_text=self.assets.fonts['default'],
-            title="Resultado",
+            font_title=self.assets.fonts['big'],
+            font_text=self.assets.fonts['small'],
+            title="RESULTADO",
             message=mensaje,
             on_close=self.terminar_popup,
             on_next=None,
@@ -191,7 +191,7 @@ class LetraScene:
                         self.screen,
                         font_title=self.assets.fonts['big'],
                         font_text=self.assets.fonts['small'],
-                        title="Resultado",
+                        title="RESULTADO",
                         message=f"Tuviste {incorrectas} malas de {total}",
                         on_close=self.terminar_popup,
                         on_next=None,
@@ -242,9 +242,9 @@ class LetraScene:
         self.screen.blit(letra_grande, (90, HEIGHT // 2 - letra_grande.get_height() // 2))
         # Mostrar progreso tipo "1 de 3"
         progreso_texto = f"{self.escribe_aciertos} / 3"
-        progreso_render = self.assets.fonts['default'].render(progreso_texto, True, (244, 211, 94))
-        progreso_x = WIDTH // 2 + 120
-        progreso_y = 30  # altura superior
+        progreso_render = self.assets.fonts['small'].render(progreso_texto, True, (244, 211, 94))
+        progreso_x = 390
+        progreso_y = 50  # altura superior
 
         self.screen.blit(progreso_render, (progreso_x, progreso_y))
 
@@ -446,7 +446,7 @@ class LetraScene:
 
             # Verificar si todos los slots están llenos
             if None not in self.letras_colocadas:
-                print("⚠️ Todos los slots están llenos, evaluando...")
+                print("Todos los slots están llenos, evaluando...")
                 incorrectas = 0
                 for i, ficha_id in enumerate(self.letras_colocadas):
                     letra_correcta = self.letras_objetivo[i]

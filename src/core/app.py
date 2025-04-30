@@ -41,7 +41,7 @@ class BrailleApp:
         self.state_manager.add_state("signos", SignosScene(self.assets, self.progress))    
         self.state_manager.add_state("desfinal", TraductorScene(self.assets))       
         self.state_manager.add_state("configurar", ConfigScene(self.assets, self.music_manager))
-        self.state_manager.set_state("intro")                                                   #para probar desde el principio
+        self.state_manager.set_state("alfabeto")                                                   #para probar desde el principio
 
     def run(self):
         running = True
