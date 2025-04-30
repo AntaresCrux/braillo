@@ -20,6 +20,10 @@ class LetraScene:
         self.popup_timer_escribe = None
         self.popup_timer_acomoda = None
         self.braille_map = self.cargar_braille_letras("assets/data/braille_letters.json")
+        self.last_touch_time = pygame.time.get_ticks()
+        self.inactividad_timeout = 5000  # 3 segundos de inactividad
+        self.inactividad_detectada = False
+        self.evaluar_button_escribe = pygame.Rect(WIDTH // 2 - 50, HEIGHT // 2 - -80, 90, 35)
 
         self.ejercicios = ["Escribe la letra", "Identifica la letra", "Acomoda la letra"]
         self.current_index = 0
@@ -98,19 +102,57 @@ class LetraScene:
 
     def handle_event_escribe(self, event):
         if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+            self.last_touch_time = pygame.time.get_ticks()
+            self.inactividad_detectada = False
+            # Si hace clic en el botón "Evaluar"
+            if self.evaluar_button_escribe.collidepoint(event.pos):
+                if not self.inactividad_detectada:
+                    self.inactividad_detectada = True
+                    self.evaluar_escribe_usuario()
+                return
             for i, (x, y) in enumerate(self.puntos):
                 if pygame.Rect(x - 20, y - 20, 40, 40).collidepoint(event.pos):
                     punto = i + 1
-                    correcto = punto in self.objetivo_puntos
-                    self.seleccion_usuario[punto] = "correcto" if correcto else "incorrecto"
+                    if punto in self.seleccion_usuario:
+                        # 🔄 Si ya estaba seleccionado, quitarlo (corregir)
+                        del self.seleccion_usuario[punto]
+                    else:
+                        # 🔵 Si no estaba seleccionado, marcarlo
+                        correcto = punto in self.objetivo_puntos
+                        self.seleccion_usuario[punto] = "correcto" if correcto else "incorrecto"
 
-                    if all(p in self.seleccion_usuario for p in self.objetivo_puntos):
-                        if all(self.seleccion_usuario[p] == "correcto" for p in self.objetivo_puntos):
-                            self.mensaje_popup_escribe = "Escribe la letra"
-                            self.popup_timer_escribe = pygame.time.get_ticks() + 2000
+
+    def evaluar_escribe_usuario(self):
+        seleccionados = set(self.seleccion_usuario.keys())
+        correctos = set(self.objetivo_puntos)
+
+        if seleccionados == correctos:
+            mensaje = "¡Correcto! Has escrito bien la letra."
+            self.escribe_aciertos += 1
+        else:
+            mensaje = "¡Incorrecto! No escribiste bien la letra."
+
+        self.popup = PopupMessage(
+            self.screen,
+            font_title=self.assets.fonts['default'],
+            font_text=self.assets.fonts['default'],
+            title="Resultado",
+            message=mensaje,
+            on_close=self.terminar_popup,
+            on_next=None,
+            show_next=False
+        )
+        self.popup.show()
+
+    
 
     def update(self, dt):
         self.sidebar.update(dt)
+        # Verificar inactividad en "Escribe la letra"
+        if self.current_index == 0 and not self.popup and not self.inactividad_detectada:
+            if pygame.time.get_ticks() - self.last_touch_time >= self.inactividad_timeout:
+                self.inactividad_detectada = True
+                self.evaluar_escribe_usuario()
         if self.reset_drop_timer and pygame.time.get_ticks() >= self.reset_drop_timer:
             self.reset_drop_timer = None
 
@@ -125,8 +167,8 @@ class LetraScene:
                     self.resultado_color = None
                     self.drop_ficha_activa = None
 
-        if self.popup_timer and pygame.time.get_ticks() >= self.popup_timer:
-            self.popup_timer = None
+        if self.popup_timer_acomoda and pygame.time.get_ticks() >= self.popup_timer_acomoda:
+            self.popup_timer_acomoda = None
 
             if self.mensaje_popup_acomoda:
                 incorrectas = self.mensaje_popup_acomoda["incorrectas"]
@@ -157,11 +199,11 @@ class LetraScene:
                     )
                 self.popup.show()
                 self.mensaje_popup_acomoda = None
-
         if self.mensaje_popup_escribe and self.popup_timer_escribe and pygame.time.get_ticks() >= self.popup_timer_escribe:
             self.popup_timer_escribe = None
             self.mostrar_popup(self.mensaje_popup_escribe)
             self.mensaje_popup_escribe = None
+
     def draw(self):
         self.screen.fill((13, 59, 102))
         draw_text_centered(self.screen, self.ejercicios[self.current_index], self.assets.fonts['default'], 30)
@@ -198,6 +240,13 @@ class LetraScene:
         # Render texto principal (blanco)
         letra_grande = self.assets.fonts['giant'].render(self.objetivo_letra, True, (255, 255, 255))
         self.screen.blit(letra_grande, (90, HEIGHT // 2 - letra_grande.get_height() // 2))
+        # Mostrar progreso tipo "1 de 3"
+        progreso_texto = f"{self.escribe_aciertos} / 3"
+        progreso_render = self.assets.fonts['default'].render(progreso_texto, True, (244, 211, 94))
+        progreso_x = WIDTH // 2 + 120
+        progreso_y = 30  # altura superior
+
+        self.screen.blit(progreso_render, (progreso_x, progreso_y))
 
         for i, (x, y) in enumerate(self.puntos):
             estado = self.seleccion_usuario.get(i + 1)
@@ -207,6 +256,35 @@ class LetraScene:
             elif estado == "incorrecto":
                 color = (200, 0, 0)
             draw_circle_with_label(self.screen, (x, y), 24, "", self.assets.fonts['giant'], color=color)
+       # Mostrar barra de cuenta regresiva si está activo
+        if not self.inactividad_detectada:
+            elapsed = pygame.time.get_ticks() - self.last_touch_time
+            progress = min(1.0, elapsed / self.inactividad_timeout)
+
+            # Posición: entre letra y círculos (verticalmente)
+            bar_width = 95
+            bar_height = 17
+            bar_x = WIDTH // 2 - bar_width // 2
+            bar_y = HEIGHT // 2 - 90
+
+            # Fondo de la barra
+            pygame.draw.rect(self.screen, (80, 80, 80), (bar_x, bar_y, bar_width, bar_height), border_radius=10)
+
+            # Color dinámico basado en progreso
+            if progress < 0.5:
+                bar_color = (0, 200, 0)  # Verde
+            elif progress < 0.8:
+                bar_color = (255, 215, 0)  # Amarillo
+            else:
+                bar_color = (249, 87, 56)  # Rojo
+
+            # Barra de progreso
+            pygame.draw.rect(self.screen, bar_color, (bar_x, bar_y, int(bar_width * progress), bar_height), border_radius=10)
+        # Dibujar botón "Evaluar Ahora"
+        pygame.draw.rect(self.screen, (249, 87, 56), self.evaluar_button_escribe, border_radius=10)
+        texto_evaluar = self.assets.fonts['default'].render("Evaluar", True, (255, 255, 255))
+        text_rect = texto_evaluar.get_rect(center=self.evaluar_button_escribe.center)
+        self.screen.blit(texto_evaluar, text_rect)
 
 
     def iniciar_identifica(self):
@@ -337,6 +415,15 @@ class LetraScene:
             for ficha_id, ficha in self.fichas.items():
                 if ficha["dragging"]:
                     ficha["dragging"] = False
+                    # Si la ficha estaba en un slot y se soltó fuera → remover del slot
+                    if ficha["slot"] is not None:
+                        slot_idx = ficha["slot"]
+                        if not self.slots[slot_idx].collidepoint(ficha["pos"]):
+                            self.letras_colocadas[slot_idx] = None
+                            self.colores_slots[slot_idx] = None
+                            ficha["slot"] = None
+                            self.popup_timer_acomoda = None
+
                     for i, slot in enumerate(self.slots):
                         if slot.collidepoint(ficha["pos"]):
                             # Si el slot ya tiene una ficha incorrecta, quitarla
@@ -357,6 +444,7 @@ class LetraScene:
 
             # Verificar si todos los slots están llenos
             if None not in self.letras_colocadas:
+                print("⚠️ Todos los slots están llenos, evaluando...")
                 incorrectas = 0
                 for i, ficha_id in enumerate(self.letras_colocadas):
                     letra_correcta = self.letras_objetivo[i]
@@ -373,7 +461,7 @@ class LetraScene:
                     "total": len(self.letras_objetivo),
                     "final": self.acomoda_intentos >= self.max_intentos
                 }
-                self.popup_timer_acomoda = pygame.time.get_ticks() + 2000
+                self.popup_timer_acomoda = pygame.time.get_ticks() + 5000
 
 
         elif event.type == pygame.MOUSEMOTION:
@@ -476,8 +564,17 @@ class LetraScene:
     def terminar_popup(self):
         self.popup = None
         self.estado = "en_curso"
+
         if self.current_index == 0:
-            self.generar_letra()
+            if self.escribe_aciertos >= 3:
+                self.current_index = 1
+                self.escribe_aciertos = 0
+                self.iniciar_identifica()
+            else:
+                self.generar_letra()
+                self.last_touch_time = pygame.time.get_ticks()
+                self.inactividad_detectada = False
+
         elif self.current_index == 1:
             self.iniciar_identifica()
         elif self.current_index == 2:
