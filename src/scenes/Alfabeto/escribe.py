@@ -99,6 +99,8 @@ class EscribeLetra:
 
     def draw(self, screen):
         screen.fill((13, 59, 102))
+        titulo = self.assets.fonts['default'].render("Escribe la letra", True, (255, 255, 255))
+        screen.blit(titulo, (WIDTH // 2 - titulo.get_width() // 2, 20))
 
         letra_surface = self.assets.fonts['big'].render(self.objetivo_letra, True, (255, 255, 255))
         screen.blit(letra_surface, (90, HEIGHT // 2 - letra_surface.get_height() // 2))

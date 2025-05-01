@@ -85,4 +85,5 @@ def load_fonts():
         'braille_default': pygame.font.Font(ASSETS_PATHS['braille_font'], 32),
         'braille_big': pygame.font.Font(ASSETS_PATHS['braille_font'], 48),
         'braille_huge': pygame.font.Font(ASSETS_PATHS['braille_font'], 64),
+        'braille_huge_2': pygame.font.Font(ASSETS_PATHS['braille_font'], 70),
     }

@@ -1,6 +1,6 @@
 import pygame
 from utils.settings import WIDTH, HEIGHT, ASSETS_PATHS
-from utils.colors import BACKGROUND_COLOR, AMARILLO_PASTEL, NARANJA, CREMA_CLARO, ROJO_ANARANJADO
+from utils.colors import BACKGROUND_COLOR, AMARILLO_PASTEL, NARANJA, CREMA_CLARO, ROJO_ANARANJADO, NEGRO
 from ui.ui_helpers import draw_text_centered
 
 class TraductorScene:
@@ -11,8 +11,8 @@ class TraductorScene:
         self.texto = ""
         self.texto_traducido = ""
         self.texto_activo = False
-        self.input_rect = pygame.Rect(40, 100, 400, 45)
-        self.braille_rect = pygame.Rect(40, 170, 400, 60)
+        self.input_rect = pygame.Rect(40, 80, 400, 60)
+        self.braille_rect = pygame.Rect(40, 150, 400, 90)
 
         self.scroll_x = 0
         self.scroll_input_x = 0
@@ -89,9 +89,9 @@ class TraductorScene:
         # Render del texto de entrada con clipping
         input_surface = pygame.Surface((self.input_rect.width, self.input_rect.height), pygame.SRCALPHA)
         pygame.draw.rect(input_surface, CREMA_CLARO, input_surface.get_rect(), border_radius=8)  # fondo
-        pygame.draw.rect(input_surface, NARANJA, input_surface.get_rect(), 4, border_radius=8)   # borde
+        pygame.draw.rect(input_surface, NEGRO, input_surface.get_rect(), 4, border_radius=8)   # borde
 
-        texto_surface = self.assets.fonts['small'].render(self.texto, True, NARANJA)
+        texto_surface = self.assets.fonts['big'].render(self.texto, True, NEGRO)
         texto_width = texto_surface.get_width()
         self.max_scroll_input = max(0, texto_width - self.input_rect.width + 20)
 
@@ -103,7 +103,7 @@ class TraductorScene:
         pygame.draw.rect(self.screen, ROJO_ANARANJADO, self.braille_rect, 4, border_radius=8)
 
         braille_surface = pygame.Surface((self.braille_rect.width, self.braille_rect.height), pygame.SRCALPHA)
-        braille_render = self.assets.fonts['braille_big'].render(self.texto_traducido, True, ROJO_ANARANJADO)
+        braille_render = self.assets.fonts['braille_huge_2'].render(self.texto_traducido, True, ROJO_ANARANJADO)
         braille_width = braille_render.get_width()
         self.max_scroll = max(0, braille_width - self.braille_rect.width + 20)
 
@@ -143,35 +143,3 @@ class TraductorScene:
                     resultado.append(c)
 
         return ''.join(resultado)
-
-
-"""
-import pygame
-from utils.colors import BLANCO, BACKGROUND_COLOR
-
-class TraductorScene:
-    def __init__(self, assets):
-        self.screen = pygame.display.get_surface()
-        self.assets = assets
-        self.texto = "Árbol"
-
-    def update(self, dt):
-        pass  # Luego añadiremos interactividad aquí
-
-    def draw(self):
-        self.screen.fill(BACKGROUND_COLOR)
-
-        # Texto normal (como título o entrada)
-        titulo = self.assets.fonts['small'].render("Traducción Braille:", True, BLANCO)
-        self.screen.blit(titulo, (30, 30))
-
-        # Braille renderizado
-        braille_surface = self.assets.fonts['braille_big'].render(self.texto, True, BLANCO)
-        self.screen.blit(braille_surface, (30, 100))
-
-        # Texto original (en letras normales)
-        texto_render = self.assets.fonts['small'].render(self.texto, True, BLANCO)
-        self.screen.blit(texto_render, (30, 200))
-
-        pygame.display.flip()
-"""
