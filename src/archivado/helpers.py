@@ -1,1 +1,0 @@
-# Funciones auxiliares: carga de imágenes, escalado, etc.
